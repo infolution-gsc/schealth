@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "813435123907",
+    "project_id": "healthy-daily-planner",
+    "storage_bucket": "healthy-daily-planner.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:813435123907:android:a03f83b026b7ab224eca76",
+        "android_client_info": {
+          "package_name": "com.example.healthy_planner"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "813435123907-fv7vhbu1oi8o98kglu4c2gn0mk56m08r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC_06G5eqF6Jtvq4qxD70TOAtfHdDo9l5I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "813435123907-fv7vhbu1oi8o98kglu4c2gn0mk56m08r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
