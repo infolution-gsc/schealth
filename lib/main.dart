@@ -20,8 +20,8 @@ class HealthyDailyPlanner extends StatelessWidget {
       home: HomePage(),
       routes: {
         '/sigin': (context) => const SignIn(),
-        '/home':(context) =>  const HomePage(),
-        '/dashboard':(context) =>  const Dashboard(),
+        '/home': (context) => const HomePage(),
+        '/dashboard': (context) => const Dashboard(),
         // '/signup': (context) => SignUP(),
       },
       theme: ThemeData(
