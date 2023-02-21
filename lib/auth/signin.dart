@@ -6,6 +6,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:healthy_planner/auth/signup.dart';
 import 'package:healthy_planner/page/dashboard.dart';
 import 'package:healthy_planner/page/home.dart';
 
@@ -62,7 +63,7 @@ class _SignInState extends State<SignIn> {
       body: Container(
         padding: const EdgeInsets.symmetric(horizontal: 24),
         child: SingleChildScrollView(
-          padding: const EdgeInsets.only(top: 75),
+          padding: const EdgeInsets.only(top: 20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -82,19 +83,19 @@ class _SignInState extends State<SignIn> {
               ),
               Text(
                 'Hello Again!',
-                style: GoogleFonts.lato(
+                style: GoogleFonts.poppins(
                   fontSize: 24,
-                  fontWeight: FontWeight.w800,
+                  fontWeight: FontWeight.w700,
                 ),
                 textAlign: TextAlign.left,
               ),
-              const SizedBox(
-                height: 10,
-              ),
+              // const SizedBox(
+              //   height: 5,
+              // ),
               Text(
                 'Welcome back you’ve been missed',
-                style: GoogleFonts.lato(
-                  fontSize: 16,
+                style: GoogleFonts.poppins(
+                  fontSize: 14,
                   fontWeight: FontWeight.w500,
                 ),
                 textAlign: TextAlign.left,
@@ -262,7 +263,12 @@ class _SignInState extends State<SignIn> {
                 children: [
                   const Text('Don\'t have an account?'),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(builder: (context) => const SignUp()
+                        )
+                      );
+                    },
                     child: const Text(
                       'Sign Up',
                       style: TextStyle(
