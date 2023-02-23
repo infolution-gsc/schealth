@@ -1,10 +1,9 @@
 //Dashboard
 
-import 'dart:html';
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:healthy_planner/theme.dart';
+import 'package:lite_rolling_switch/lite_rolling_switch.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -26,12 +25,8 @@ class _DashboardState extends State<Dashboard> {
           color: Colors.transparent,
           elevation: 0,
           child: Column(children: [
-            IconButton(
-              onPressed: () {},
-              icon: Icon(Icons.person),
-              color: blueColor,
-              padding: EdgeInsets.only(top: 30),
-              iconSize: 50,
+            CircleAvatar(
+              backgroundImage: AssetImage('assets/illustration/student.png'),
             ),
             Text("Hi, Ji Eun"),
           ]),
@@ -40,7 +35,7 @@ class _DashboardState extends State<Dashboard> {
         actions: <Widget>[
           IconButton(
             onPressed: () {},
-            icon: Icon(Icons.notification_add),
+            icon: const Icon(Icons.notification_add),
             color: blueColor,
           )
         ],
@@ -48,20 +43,32 @@ class _DashboardState extends State<Dashboard> {
           onPressed: () {},
           icon: IconButton(
             onPressed: () {},
-            icon: Icon(Icons.menu),
+            icon: const Icon(Icons.menu),
             color: blueColor,
           ),
         ),
       ),
-      body: Center(
-        child: Text('Dashboard'),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        child: Container(
-            height: 60,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            )),
+      body: Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.width,
+        color: Colors.transparent,
+        child: Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
+          Padding(
+              padding: EdgeInsets.only(right: 20.0),
+              child: LiteRollingSwitch(
+                value: true,
+                colorOn: blueColor,
+                colorOff: lightBlueColor,
+                iconOn: Icons.menu,
+                iconOff: Icons.volume_up,
+                textSize: 20,
+                textOn: "on",
+                textOff: "off",
+                onChanged: (bool position) {
+                  print("the button $position");
+                },
+              ))
+        ]),
       ),
     );
   }

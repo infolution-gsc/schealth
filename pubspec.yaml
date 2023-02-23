@@ -31,6 +31,7 @@ dependencies:
   flutter:
     sdk: flutter
   google_fonts: ^2.1.0 
+  lite_rolling_switch: ^0.1.1
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -69,6 +70,7 @@ flutter:
   assets:
     - assets/illustration/login.png
     - assets/logo/google.png
+    - assets/illustration/student.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
