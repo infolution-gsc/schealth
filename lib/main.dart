@@ -3,8 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:healthy_planner/auth/signin.dart';
-import 'package:healthy_planner/page/dashboard.dart';
-import 'package:healthy_planner/page/home.dart';
+import 'home.dart';
+import 'package:healthy_planner/auth/signup.dart';
 
 void main() {
   runApp(const HealthyDailyPlanner());
@@ -21,8 +21,7 @@ class HealthyDailyPlanner extends StatelessWidget {
       routes: {
         '/sigin': (context) => const SignIn(),
         '/home': (context) => const HomePage(),
-        '/dashboard': (context) => const Dashboard(),
-        // '/signup': (context) => SignUP(),
+        '/signup': (context) => SignUp(),
       },
       theme: ThemeData(
         textTheme: GoogleFonts.poppinsTextTheme(),

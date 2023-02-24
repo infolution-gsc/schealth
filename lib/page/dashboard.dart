@@ -1,9 +1,7 @@
 //Dashboard
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:healthy_planner/theme.dart';
-import 'package:lite_rolling_switch/lite_rolling_switch.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -16,59 +14,42 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        toolbarHeight: 100,
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        title: Card(
-          color: Colors.transparent,
-          elevation: 0,
-          child: Column(children: [
-            CircleAvatar(
-              backgroundImage: AssetImage('assets/illustration/student.png'),
+      body: SafeArea(
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Text(
+                  'Today',
+                  style: GoogleFonts.poppins(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                  ),
+                )
+              ],
             ),
-            Text("Hi, Ji Eun"),
-          ]),
+            const SizedBox(
+              height: 40,
+            ),
+            ListView(
+              scrollDirection: Axis.vertical,
+              children: [
+                Row(
+                  children: [
+                    Text(
+                      '1 AM',
+                      style: GoogleFonts.poppins(
+                        color: Colors.grey,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w200,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            )
+          ],
         ),
-        centerTitle: true,
-        actions: <Widget>[
-          IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.notification_add),
-            color: blueColor,
-          )
-        ],
-        leading: IconButton(
-          onPressed: () {},
-          icon: IconButton(
-            onPressed: () {},
-            icon: const Icon(Icons.menu),
-            color: blueColor,
-          ),
-        ),
-      ),
-      body: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.width,
-        color: Colors.transparent,
-        child: Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
-          Padding(
-              padding: EdgeInsets.only(right: 20.0),
-              child: LiteRollingSwitch(
-                value: true,
-                colorOn: blueColor,
-                colorOff: lightBlueColor,
-                iconOn: Icons.menu,
-                iconOff: Icons.volume_up,
-                textSize: 20,
-                textOn: "on",
-                textOff: "off",
-                onChanged: (bool position) {
-                  print("the button $position");
-                },
-              ))
-        ]),
       ),
     );
   }
