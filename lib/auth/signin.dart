@@ -8,7 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:healthy_planner/auth/signup.dart';
 import 'package:healthy_planner/page/dashboard.dart';
-import 'package:healthy_planner/home.dart';
+import 'package:healthy_planner/navigation.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({Key? key}) : super(key: key);

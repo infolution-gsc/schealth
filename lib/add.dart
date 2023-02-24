@@ -15,7 +15,7 @@ class _AddState extends State<Add> {
     return Scaffold(
         body: SafeArea(
       child: Container(
-        height: 500,
+        height: 400,
         color: blueColor,
         child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -122,7 +122,7 @@ class _AddState extends State<Add> {
                     ),
                   ),
                 ],
-              )
+              ),
             ],
           ),
         ),
