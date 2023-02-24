@@ -6,13 +6,14 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:healthy_planner/components/add.dart';
 import 'package:healthy_planner/page/dashboard.dart';
 import 'package:healthy_planner/page/health.dart';
+import 'package:healthy_planner/page/profile.dart';
 import 'package:healthy_planner/page/timer.dart';
 import 'package:healthy_planner/page/task.dart';
-import 'package:healthy_planner/theme.dart';
-import 'package:healthy_planner/profile.dart';
-import 'package:healthy_planner/add.dart';
+import 'package:healthy_planner/Theme/theme.dart';
+
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);

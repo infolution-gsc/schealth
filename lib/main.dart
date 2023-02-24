@@ -2,9 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:healthy_planner/auth/signin.dart';
-import 'home.dart';
-import 'package:healthy_planner/auth/signup.dart';
+import 'package:healthy_planner/page/auth/home.dart';
+import 'package:healthy_planner/page/auth/signin.dart';
+import 'package:healthy_planner/page/auth/signup.dart';
 
 void main() {
   runApp(const HealthyDailyPlanner());
