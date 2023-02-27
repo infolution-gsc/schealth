@@ -10,6 +10,8 @@ import 'package:healthy_planner/screens/auth/signup.dart';
 import 'package:healthy_planner/screens/dashboard.dart';
 import 'package:healthy_planner/widget/navigation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:healthy_planner/widget/transitions/size_transitions.dart';
+import 'package:healthy_planner/widget/transitions/slide_transitions.dart';
 
 
 class SignIn extends StatefulWidget {
@@ -358,8 +360,7 @@ class _SignInState extends State<SignIn> {
                     const Text('Don\'t have an account?'),
                     TextButton(
                       onPressed: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => const SignUp()));
+                        Navigator.push(context, SlideTopRoute(page: const SignUp()));
                       },
                       child: const Text(
                         'Sign Up',

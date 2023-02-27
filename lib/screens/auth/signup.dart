@@ -433,7 +433,9 @@ class _SignUpState extends State<SignUp> {
                   children: [
                     const Text('Already Have an Account?'),
                     TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
                       child: const Text(
                         'Login',
                         style: TextStyle(
