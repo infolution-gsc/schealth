@@ -197,19 +197,6 @@ class _NavigationState extends State<Navigation> {
           ),
         ),
       ),
-
-      /*
-        body: FutureBuilder(
-            future: _initializeFirebase(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                return const Dashboard();
-              }
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            })
-            */
     );
   }
 
