@@ -14,15 +14,14 @@ import 'package:healthy_planner/page/timer.dart';
 import 'package:healthy_planner/page/task.dart';
 import 'package:healthy_planner/Theme/theme.dart';
 
-
-class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+class Navigation extends StatefulWidget {
+  const Navigation({Key? key}) : super(key: key);
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<Navigation> createState() => _NavigationState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _NavigationState extends State<Navigation> {
   Future<FirebaseApp> _initializeFirebase() async {
     FirebaseApp firebaseApp = await Firebase.initializeApp();
     return firebaseApp;

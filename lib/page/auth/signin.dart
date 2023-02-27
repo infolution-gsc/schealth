@@ -213,7 +213,7 @@ class _SignInState extends State<SignIn> {
                       if (user != null) {
                         // ignore: use_build_context_synchronously
                         Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: (context) => const Dashboard()));
+                            builder: (context) => const Navigation()));
                       }
                       // ignore: empty_statements
                     }
