@@ -50,6 +50,8 @@ dev_dependencies:
   #Firebase
   firebase_core: ^2.6.1
   firebase_auth: ^4.2.8
+  google_sign_in: ^5.0.0
+
 
 
 # For information on the generic Dart part of this file, see the

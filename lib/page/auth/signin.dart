@@ -1,7 +1,7 @@
 // Sign In or Log in Page
 // This page is used to sign in or log in to the app
 
-// ignore_for_file: depend_on_referenced_packages, unused_import, avoid_print, no_leading_underscores_for_local_identifiers
+// ignore_for_file: depend_on_referenced_packages, unused_import, avoid_print, no_leading_underscores_for_local_identifiers, unused_field
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -9,6 +9,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:healthy_planner/page/auth/signup.dart';
 import 'package:healthy_planner/page/dashboard.dart';
 import 'package:healthy_planner/components/navigation.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+
 
 class SignIn extends StatefulWidget {
   const SignIn({Key? key}) : super(key: key);
@@ -20,6 +22,37 @@ class SignIn extends StatefulWidget {
 
 class _SignInState extends State<SignIn> {
   bool isEnable = false;
+
+  var auth = FirebaseAuth.instance;
+
+  checkIfLogin() async {
+    auth.authStateChanges().listen((User? user) {
+      if(user != null && mounted){
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Dashboard()));
+      }
+    });
+  }
+
+  late bool _passwordVisible;
+  late final TextEditingController _emailController;
+  late final TextEditingController _passwordController;
+
+   @override
+    void initState(){
+      super.initState();
+      checkIfLogin();
+      _emailController = TextEditingController();
+      _passwordController = TextEditingController();
+      _passwordVisible=true;
+    }
+
+     @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
 
   static Future<User?> loginUsingEmail(
       {required String email,
@@ -37,6 +70,26 @@ class _SignInState extends State<SignIn> {
       }
     }
     return user;
+  }
+
+  static Future<User?> signInWithGoogle() async {
+  // Trigger the authentication flow
+    User? user;
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+
+    // Create a new credential
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+
+    UserCredential userCredential =  await FirebaseAuth.instance.signInWithCredential(credential);
+    user = userCredential.user;
+    return user;
+    // Once signed in, return the UserCredential
   }
 
   final _formKey = GlobalKey<FormState>();
@@ -105,51 +158,61 @@ class _SignInState extends State<SignIn> {
                     child: Column(
                       children: [
                         Material(
-                          shadowColor: const Color.fromARGB(150, 0, 0, 0),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(50)),
-                          elevation: 10,
-                          child: TextFormField(
-                            controller: _emailController,
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Please enter email';
-                              } else if (!value.contains('@')) {
-                                return 'Please enter a valid email address';
-                              }
-                              return null;
-                            },
-                            decoration: const InputDecoration(
-                              prefixIcon: Padding(
-                                padding: EdgeInsetsDirectional.only(
-                                    start: 20.0, end: 20.0),
-                                child: Icon(Icons.mail),
-                              ),
-                              prefixIconColor: Color(0xFF5B96F8),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(50)),
-                                borderSide: BorderSide(
-                                    width: 1, color: Color(0xFF5B96F8)),
-                              ),
-                              hintText: 'Email',
-                              hintStyle: TextStyle(
-                                  color: Color(0xFF5B96F8),
-                                  fontWeight: FontWeight.bold),
-                              contentPadding: EdgeInsets.symmetric(
-                                  horizontal: 30, vertical: 15),
-                            ),
+                        shadowColor: const Color.fromARGB(150, 0, 0, 0),
+                        borderRadius: const BorderRadius.all(Radius.circular(50)),
+                        elevation: 10,
+                        child: TextFormField(
+                          style: const TextStyle(
+                            color: Color(0xFF5B96F8),
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500
                           ),
-                        ),
+                          controller: _emailController,
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Please enter email';
+                            } else if (!value.contains('@')) {
+                              return 'Please enter a valid email address';
+                            }
+                            return null;
+                          },
+                          textInputAction: TextInputAction.next,
+                          decoration: const InputDecoration(
+                            prefixIcon: Padding(
+                              padding:  EdgeInsetsDirectional.only(start: 20.0, end: 20.0),
+                              child: Icon(Icons.mail),
+                            ),
+                            prefixIconColor: Color(0xFF5B96F8),
+                            enabledBorder:   OutlineInputBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(50)),
+                                borderSide: BorderSide( width: 0, color: Color(0xFFF5F5F5)),
+                              ),
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(50)),
+                                borderSide: BorderSide( width: 1, color: Color(0xFF5B96F8)),
+                              ),
+                            hintText: 'Email',
+                            hintStyle: TextStyle(
+                              color: Color(0xFF5B96F8),
+                              fontWeight: FontWeight.bold
+                            ),
+                            contentPadding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                          ),
+                          ),
+                      ),
                         const SizedBox(
                           height: 20,
                         ),
                         Material(
-                          shadowColor: const Color.fromARGB(150, 0, 0, 0),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(50)),
-                          elevation: 10,
-                          child: TextFormField(
+                        shadowColor: const Color.fromARGB(150, 0, 0, 0),
+                        borderRadius: const BorderRadius.all(Radius.circular(50)),
+                        elevation: 10,
+                        child: TextFormField(
+                            style: const TextStyle(
+                              color: Color(0xFF5B96F8),
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500
+                            ),
                             controller: _passwordController,
                             validator: (value) {
                               if (value!.isEmpty) {
@@ -159,35 +222,50 @@ class _SignInState extends State<SignIn> {
                               }
                               return null;
                             },
-                            obscureText: true,
-                            decoration: const InputDecoration(
-                              prefixIcon: Padding(
-                                padding: EdgeInsetsDirectional.only(
-                                    start: 20.0, end: 20.0),
+                            obscureText: _passwordVisible,
+                            keyboardType: TextInputType.visiblePassword,
+                            decoration: InputDecoration(
+                              prefixIcon: const Padding(
+                                padding:  EdgeInsetsDirectional.only(start: 20.0, end: 20.0),
                                 child: Icon(Icons.key_rounded),
                               ),
-                              prefixIconColor: Color(0xFFC2C2C2),
+                              prefixIconColor: const  Color(0xFF5B96F8),
+                              suffixIcon: IconButton(
+                                icon: Icon(
+                                  // Based on _passwordVisible state choose the icon
+                                  _passwordVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                                  color: Theme.of(context).primaryColorDark,
+                                  ),
+                                onPressed: () {
+                                  // text is not show when press
+                                  setState(() {
+                                      _passwordVisible = !_passwordVisible;
+                                  });
+                                },
+                                ),
                               // border: OutlineInputBorder(
                               //   borderRadius: BorderRadius.all(Radius.circular(50)),
                               // ),
-                              disabledBorder: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(50)),
-                                borderSide: BorderSide(
-                                    width: 0, color: Color(0xFFF5F5F5)),
+                              enabledBorder: const  OutlineInputBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(50)),
+                                borderSide: BorderSide( width: 0, color: Color(0xFFF5F5F5)),
                               ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(50)),
-                                borderSide: BorderSide(
-                                    width: 1, color: Color(0xFF5B96F8)),
-                              ),
+                              focusedBorder: const   OutlineInputBorder(
+                                  borderRadius: BorderRadius.all(Radius.circular(50)),
+                                  borderSide: BorderSide( width: 1, color: Color(0xFF5B96F8)),
+                                ),
                               hintText: 'Password',
-                              contentPadding: EdgeInsets.symmetric(
-                                  horizontal: 30, vertical: 15),
+                              hintStyle: const  TextStyle(
+                                color: Color(0xFF5B96F8),
+                                fontWeight: FontWeight.bold
+                              ),
+                              alignLabelWithHint: false,
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                             ),
                           ),
-                        ),
+                      ),
                       ],
                     )),
 
@@ -217,7 +295,7 @@ class _SignInState extends State<SignIn> {
                       }
                       // ignore: empty_statements
                     }
-                    ;
+                    
                   },
                   child: Text(
                     'Login',
@@ -242,7 +320,17 @@ class _SignInState extends State<SignIn> {
                       ),
                       minimumSize: const Size.fromHeight(50), // NEW
                     ),
-                    onPressed: () {},
+                    onPressed: () async {
+                      User? user = await signInWithGoogle();
+                      print(user);
+                      if(user != null){
+                          // ignore: use_build_context_synchronously
+                          Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(builder: (context) => const Dashboard()
+                            )
+                          );
+                        }
+                    },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [

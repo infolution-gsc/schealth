@@ -18,6 +18,22 @@ class SignUp extends StatefulWidget {
 }
 
 class _SignUpState extends State<SignUp> {
+  bool passwordVisible=false;
+  late final TextEditingController _emailController;
+  late final TextEditingController _passwordController;
+  late final TextEditingController _nameController;
+  late final TextEditingController _confirmPasswordController;
+
+
+  @override
+  void initState(){
+    super.initState();
+    _emailController = TextEditingController();
+    _passwordController = TextEditingController();
+    _nameController = TextEditingController();
+    _confirmPasswordController = TextEditingController();
+    passwordVisible=true;
+  }  
   bool isEnable = false;
 
   static Future<User?> loginUsingEmail(
@@ -113,285 +129,268 @@ class _SignUpState extends State<SignUp> {
                   height: 20,
                 ),
                 Form(
-                    key: _formKey,
-                    child: Column(
-                      children: [
-                        Material(
-                          // shadowColor: const Color.fromARGB(150, 0, 0, 0),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(50)),
-                          elevation: 0,
-                          child: TextFormField(
-                            style: const TextStyle(
-                                color: Color(0xFF5B96F8),
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500),
-                            controller: _nameController,
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Please enter name';
-                              }
-                              return null;
-                            },
-                            onTap: () {
-                              setState(() {
-                                selectedName = true;
-                              });
-                            },
-                            // onEditingComplete: () {
-                            //   onButtonTap(false);
-                            // },
-                            onFieldSubmitted: (event) {
-                              setState(() {
-                                selectedName = false;
-                              });
-                            },
+                key: _formKey,
+                child: Column(
+                  children: [
+                    Material(
+                      // shadowColor: const Color.fromARGB(150, 0, 0, 0),
+                      borderRadius: const BorderRadius.all(Radius.circular(50)),
+                      elevation: 0,
+                      child: TextFormField(
+                        style: const TextStyle(
+                          color: Color(0xFF5B96F8),
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500
+                        ),
+                        controller: _nameController,
+                        textInputAction: TextInputAction.next,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please enter name';
+                          }
+                          return null;
+                        },
+                        decoration:  InputDecoration(
+                          filled: true,
+                          fillColor: fillName ? const Color.fromARGB(0, 0, 0, 0): const Color(0xFFF5F5F5),
+                          prefixIcon: const Padding(
+                            padding:  EdgeInsetsDirectional.only(start: 20.0, end: 20.0),
+                            child: Icon(Icons.tag_faces),
+                          ),
+                          prefixIconColor: selectedName ? const Color(0xFF5B96F8) : const Color(0xFFC2C2C2),
+                          enabledBorder: const  OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(50)),
+                              borderSide: BorderSide( width: 0, color: Color(0xFFF5F5F5)),
+                            ),
+                          focusedBorder: const OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(50)),
+                              borderSide: BorderSide( width: 1, color: Color(0xFF5B96F8)),
+                            ),
+                          hintText: 'Name',
+                          hintStyle: const TextStyle(
+                            color: Color(0xFFC2C2C2),
+                            fontWeight: FontWeight.bold
+                          ),
+                          focusColor: const Color(0xFF5B96F8),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                        ),
+                        ),
+                    ),
 
-                            onTapOutside: (event) {
-                              setState(() {
-                                selectedName = false;
-                              });
-                            },
-                            decoration: InputDecoration(
-                              filled: fillName,
-                              fillColor: fillName
-                                  ? const Color.fromARGB(0, 0, 0, 0)
-                                  : const Color(0xFFF5F5F5),
-                              prefixIcon: const Padding(
-                                padding: EdgeInsetsDirectional.only(
-                                    start: 20.0, end: 20.0),
-                                child: Icon(Icons.tag_faces),
-                              ),
-                              prefixIconColor: selectedName
-                                  ? const Color(0xFF5B96F8)
-                                  : const Color(0xFFC2C2C2),
-                              enabledBorder: const OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(50)),
-                                borderSide: BorderSide(
-                                    width: 0, color: Color(0xFFF5F5F5)),
-                              ),
-                              focusedBorder: const OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(50)),
-                                borderSide: BorderSide(
-                                    width: 1, color: Color(0xFF5B96F8)),
-                              ),
-                              hintText: 'Name',
-                              hintStyle: const TextStyle(
-                                  color: Color(0xFFC2C2C2),
-                                  fontWeight: FontWeight.bold),
-                              focusColor: const Color(0xFF5B96F8),
-                              contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 30, vertical: 15),
+                    const SizedBox(
+                      height: 20,
+                    ),
+
+                    Material(
+                      borderRadius: const BorderRadius.all(Radius.circular(50)),
+                      child: TextFormField(
+                        textInputAction: TextInputAction.next,
+
+                        style: const TextStyle(
+                          color: Color(0xFF5B96F8),
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500
+                        ),
+                        controller: _emailController,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please enter email';
+                          } else if (!value.contains('@')) {
+                            return 'Please enter a valid email address';
+                          }
+                          return null;
+                        },
+                        decoration: InputDecoration(
+                          filled: true,
+                          fillColor: fillEmail ? const Color.fromARGB(0, 0, 0, 0): const Color(0xFFF5F5F5),
+                          prefixIcon: const Padding(
+                            padding:  EdgeInsetsDirectional.only(start: 20.0, end: 20.0),
+                            child: Icon(Icons.mail),
+                          ),
+                          prefixIconColor: selectedEmail ? const Color(0xFF5B96F8) : const Color(0xFFC2C2C2),
+                          focusedBorder: const OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(50)),
+                              borderSide: BorderSide( width: 1, color: Color(0xFF5B96F8)),
                             ),
+                          enabledBorder: const OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(50)),
+                              borderSide: BorderSide( width: 0, color: Color(0xFFF5F5F5)),
+                            ),
+                          hintText: 'Email',
+                          hintStyle:const TextStyle(
+                            color: Color(0xFFC2C2C2),
+                            fontWeight: FontWeight.bold
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                        ),
+                        ),
+                    ),
+
+                    const SizedBox(
+                      height: 20,
+                    ),
+
+                    Material(
+                      borderRadius: const BorderRadius.all(Radius.circular(50)),
+                      child: TextFormField(
+                        textInputAction: TextInputAction.next,
+
+                        obscureText: passwordVisible,
+                        style: const TextStyle(
+                          color: Color(0xFF5B96F8),
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500
+                        ),
+                        controller: _passwordController,
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Please enter password';
+                          } else if (value.length < 6) {
+                            return 'Password must be at least 6 characters long';
+                          }
+                          return null;
+                        },
+                        // onTap: () {
+                        //   setState(() {
+                        //     selectedPass = true;
+                        //   });                        },
+                        // // onEditingComplete: () {
+                        // //   onButtonTap(false);
+                        // // },
+                        // onTapOutside: (event) {
+                        //   setState(() {
+                        //     selectedPass = false;
+                        //   });
+                        // },
+                        decoration: InputDecoration(
+                          prefixIcon: const Padding(
+                            padding:  EdgeInsetsDirectional.only(start: 20.0, end: 20.0),
+                            child: Icon(Icons.key_rounded),
+                          ),
+                          filled: true,
+                          fillColor: fillPass ? const Color.fromARGB(0, 0, 0, 0): const Color(0xFFF5F5F5),
+                          prefixIconColor: selectedPass ? const Color(0xFF5B96F8) : const Color(0xFFC2C2C2),
+                          suffixIcon: IconButton(
+                              icon: Icon(
+                                // Based on passwordVisible state choose the icon
+                                passwordVisible
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                                color: Theme.of(context).primaryColorDark,
+                                ),
+                              onPressed: () {
+                                // text is not show when press
+
+                                setState(() {
+                                    passwordVisible = !passwordVisible;
+                                });
+                              },
+                              ),
+                          focusedBorder: const OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(50)),
+                              borderSide: BorderSide( width: 1, color: Color(0xFF5B96F8)),
+                            ),
+                          enabledBorder: const  OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(50)),
+                              borderSide: BorderSide( width: 0, color: Color(0xFFF5F5F5)),
+                            ),
+                          hintText: 'Password',
+                          hintStyle: const TextStyle(
+                            color: Color(0xFFC2C2C2),
+                            fontWeight: FontWeight.bold
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                        ),
+                        ),
+                    ),
+
+                    const SizedBox(
+                      height: 20,
+                    ),
+
+                    Material(
+                      borderRadius: const BorderRadius.all(Radius.circular(50)),
+                      child: TextFormField(
+                          textInputAction: TextInputAction.done,
+
+                          style: const TextStyle(
+                            color: Color(0xFF5B96F8),
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500
+                          ),
+                          controller: _confirmPasswordController,
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Please enter password';
+                            } else if (value.length < 6) {
+                              return 'Password must be at least 6 characters';
+                            }
+                            return null;
+                          },
+                          obscureText: passwordVisible,
+                        //   onTap: () {
+                        //   setState(() {
+                        //     selectedConfirm = true;
+                        //   });                        },
+                        // // onEditingComplete: () {
+                        // //   onButtonTap(false);
+                        // // },
+                        // onTapOutside: (event) {
+                        //   setState(() {
+                        //     selectedConfirm = false;
+                        //   });
+                        // },
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: fillConfirm ? const Color.fromARGB(0, 0, 0, 0): const Color(0xFFF5F5F5),
+                            prefixIcon: const  Padding(
+                              padding:   EdgeInsetsDirectional.only(start: 20.0, end: 20.0),
+                              child: Icon(Icons.key_rounded)
+                            ),
+                            prefixIconColor: selectedConfirm ? const Color(0xFF5B96F8) : const Color(0xFFC2C2C2),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                // Based on passwordVisible state choose the icon
+                                passwordVisible
+                                ? Icons.visibility
+                                : Icons.visibility_off,
+                                color: Theme.of(context).primaryColorDark,
+                                ),
+                              onPressed: () {
+                                // text is not show when press
+
+                                setState(() {
+                                    passwordVisible = !passwordVisible;
+                                });
+                              },
+                              ),
+                            focusColor: const Color(0xFFF5F5F5),
+                            focusedBorder: const OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(50)),
+                              borderSide: BorderSide( width: 1, color: Color(0xFF5B96F8)),
+                            ),
+                            // border: OutlineInputBorder(
+                            //   borderRadius: BorderRadius.all(Radius.circular(50)),
+                            // ),
+                            enabledBorder: const  OutlineInputBorder(
+                              borderRadius: BorderRadius.all(Radius.circular(50)),
+                              borderSide: BorderSide( width: 0, color: Color(0xFFF5F5F5)),
+                            ),
+                            // enabledBorder:  OutlineInputBorder(
+                            //     borderRadius: BorderRadius.all(Radius.circular(50)),
+                            //     borderSide: BorderSide( width: 1, color: Color(0xFF5B96F8)),
+                            //   ),
+                            hintText: 'Confirm Password',
+                            hintStyle: const TextStyle(
+                              color: Color(0xFFC2C2C2),
+                              fontWeight: FontWeight.bold
+                            ),
+                            contentPadding: const  EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                           ),
                         ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Material(
-                          shadowColor: const Color.fromARGB(150, 0, 0, 0),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(50)),
-                          elevation: 10,
-                          child: TextFormField(
-                            style: const TextStyle(
-                                color: Color(0xFF5B96F8),
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500),
-                            controller: _emailController,
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Please enter email';
-                              } else if (!value.contains('@')) {
-                                return 'Please enter a valid email address';
-                              }
-                              return null;
-                            },
-                            onTap: () {
-                              setState(() {
-                                selectedEmail = true;
-                              });
-                            },
-                            // onEditingComplete: () {
-                            //   onButtonTap(false);
-                            // },
-                            onTapOutside: (event) {
-                              setState(() {
-                                selectedEmail = false;
-                              });
-                            },
-                            decoration: InputDecoration(
-                              prefixIcon: const Padding(
-                                padding: EdgeInsetsDirectional.only(
-                                    start: 20.0, end: 20.0),
-                                child: Icon(Icons.mail),
-                              ),
-                              prefixIconColor: selectedEmail
-                                  ? const Color(0xFF5B96F8)
-                                  : const Color(0xFFC2C2C2),
-                              focusedBorder: const OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(50)),
-                                borderSide: BorderSide(
-                                    width: 1, color: Color(0xFF5B96F8)),
-                              ),
-                              enabledBorder: const OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(50)),
-                                borderSide: BorderSide(
-                                    width: 0, color: Color(0xFFF5F5F5)),
-                              ),
-                              hintText: 'Email',
-                              hintStyle: const TextStyle(
-                                  color: Color(0xFFC2C2C2),
-                                  fontWeight: FontWeight.bold),
-                              contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 30, vertical: 15),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Material(
-                          shadowColor: const Color.fromARGB(150, 0, 0, 0),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(50)),
-                          elevation: 10,
-                          child: TextFormField(
-                            style: const TextStyle(
-                                color: Color(0xFF5B96F8),
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500),
-                            controller: _emailController,
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Please enter password';
-                              } else if (value.length < 6) {
-                                return 'Password must be at least 6 characters long';
-                              }
-                              return null;
-                            },
-                            onTap: () {
-                              setState(() {
-                                selectedPass = true;
-                              });
-                            },
-                            // onEditingComplete: () {
-                            //   onButtonTap(false);
-                            // },
-                            onTapOutside: (event) {
-                              setState(() {
-                                selectedPass = false;
-                              });
-                            },
-                            decoration: InputDecoration(
-                              prefixIcon: const Padding(
-                                padding: EdgeInsetsDirectional.only(
-                                    start: 20.0, end: 20.0),
-                                child: Icon(Icons.key_rounded),
-                              ),
-                              prefixIconColor: selectedPass
-                                  ? const Color(0xFF5B96F8)
-                                  : const Color(0xFFC2C2C2),
-                              focusedBorder: const OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(50)),
-                                borderSide: BorderSide(
-                                    width: 1, color: Color(0xFF5B96F8)),
-                              ),
-                              enabledBorder: const OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(50)),
-                                borderSide: BorderSide(
-                                    width: 0, color: Color(0xFFF5F5F5)),
-                              ),
-                              hintText: 'Password',
-                              hintStyle: const TextStyle(
-                                  color: Color(0xFFC2C2C2),
-                                  fontWeight: FontWeight.bold),
-                              contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 30, vertical: 15),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        Material(
-                          shadowColor: const Color.fromARGB(150, 0, 0, 0),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(50)),
-                          elevation: 10,
-                          child: TextFormField(
-                            style: const TextStyle(
-                                color: Color(0xFF5B96F8),
-                                fontSize: 12,
-                                fontWeight: FontWeight.w500),
-                            controller: _confirmPasswordController,
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'Please enter password';
-                              } else if (value.length < 6) {
-                                return 'Password must be at least 6 characters';
-                              }
-                              return null;
-                            },
-                            obscureText: true,
-                            onTap: () {
-                              setState(() {
-                                selectedConfirm = true;
-                              });
-                            },
-                            // onEditingComplete: () {
-                            //   onButtonTap(false);
-                            // },
-                            onTapOutside: (event) {
-                              setState(() {
-                                selectedConfirm = false;
-                              });
-                            },
-                            decoration: InputDecoration(
-                              prefixIcon: const Padding(
-                                  padding: EdgeInsetsDirectional.only(
-                                      start: 20.0, end: 20.0),
-                                  child: Icon(Icons.key_rounded)),
-                              prefixIconColor: selectedConfirm
-                                  ? const Color(0xFF5B96F8)
-                                  : const Color(0xFFC2C2C2),
-                              focusColor: const Color(0xFFF5F5F5),
-                              focusedBorder: const OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(50)),
-                                borderSide: BorderSide(
-                                    width: 1, color: Color(0xFF5B96F8)),
-                              ),
-                              // border: OutlineInputBorder(
-                              //   borderRadius: BorderRadius.all(Radius.circular(50)),
-                              // ),
-                              enabledBorder: const OutlineInputBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(50)),
-                                borderSide: BorderSide(
-                                    width: 0, color: Color(0xFFF5F5F5)),
-                              ),
-                              // enabledBorder:  OutlineInputBorder(
-                              //     borderRadius: BorderRadius.all(Radius.circular(50)),
-                              //     borderSide: BorderSide( width: 1, color: Color(0xFF5B96F8)),
-                              //   ),
-                              hintText: 'Confirm Password',
-                              hintStyle: const TextStyle(
-                                  color: Color(0xFFC2C2C2),
-                                  fontWeight: FontWeight.bold),
-                              contentPadding: const EdgeInsets.symmetric(
-                                  horizontal: 30, vertical: 15),
-                            ),
-                          ),
-                        ),
-                      ],
-                    )),
+                    ),
+                ],)
+              ),
                 const SizedBox(
                   height: 20,
                 ),
@@ -416,8 +415,7 @@ class _SignUpState extends State<SignUp> {
                             builder: (context) => const Dashboard()));
                       }
                       // ignore: empty_statements
-                    }
-                    ;
+                    };
                   },
                   child: Text(
                     'Sign Up',

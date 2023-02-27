@@ -5,8 +5,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:healthy_planner/page/auth/signin.dart';
-import 'package:healthy_planner/page/dashboard.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 
 class HomePage extends StatefulWidget {
