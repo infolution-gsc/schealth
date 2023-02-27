@@ -2,7 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:healthy_planner/page/auth/home.dart';
+import 'package:healthy_planner/screens/auth/home.dart';
 
 void main() {
   runApp(const HealthyDailyPlanner());

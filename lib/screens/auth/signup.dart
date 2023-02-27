@@ -6,8 +6,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:healthy_planner/page/dashboard.dart';
-import 'package:healthy_planner/components/navigation.dart';
+import 'package:healthy_planner/screens/dashboard.dart';
+import 'package:healthy_planner/widget/navigation.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({Key? key}) : super(key: key);

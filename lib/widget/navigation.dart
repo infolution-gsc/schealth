@@ -6,13 +6,13 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:healthy_planner/components/add.dart';
-import 'package:healthy_planner/page/dashboard.dart';
-import 'package:healthy_planner/page/health.dart';
-import 'package:healthy_planner/page/profile.dart';
-import 'package:healthy_planner/page/timer.dart';
-import 'package:healthy_planner/page/task.dart';
-import 'package:healthy_planner/Theme/theme.dart';
+import 'package:healthy_planner/widget/add.dart';
+import 'package:healthy_planner/screens/dashboard.dart';
+import 'package:healthy_planner/screens/health.dart';
+import 'package:healthy_planner/screens/profile.dart';
+import 'package:healthy_planner/screens/timer.dart';
+import 'package:healthy_planner/screens/task.dart';
+import 'package:healthy_planner/utils/theme.dart';
 
 
 class HomePage extends StatefulWidget {

@@ -6,9 +6,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:healthy_planner/page/auth/signup.dart';
-import 'package:healthy_planner/page/dashboard.dart';
-import 'package:healthy_planner/components/navigation.dart';
+import 'package:healthy_planner/screens/auth/signup.dart';
+import 'package:healthy_planner/screens/dashboard.dart';
+import 'package:healthy_planner/widget/navigation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 

@@ -4,7 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:healthy_planner/page/auth/signin.dart';
+import 'package:healthy_planner/screens/auth/signin.dart';
 
 
 class HomePage extends StatefulWidget {
