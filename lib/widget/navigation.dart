@@ -4,15 +4,17 @@
 // ignore_for_file: depend_on_referenced_packages
 
 import 'package:flutter/material.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:healthy_planner/widget/add.dart';
+import 'package:healthy_planner/widget/add_daily.dart';
+import 'package:healthy_planner/widget/add_task.dart';
 import 'package:healthy_planner/screens/dashboard.dart';
 import 'package:healthy_planner/screens/health.dart';
 import 'package:healthy_planner/screens/profile.dart';
 import 'package:healthy_planner/screens/timer.dart';
 import 'package:healthy_planner/screens/task.dart';
 import 'package:healthy_planner/utils/theme.dart';
+import 'expendable_fab.dart';
+import 'action_button.dart';
 
 class Navigation extends StatefulWidget {
   const Navigation({Key? key}) : super(key: key);
@@ -22,11 +24,6 @@ class Navigation extends StatefulWidget {
 }
 
 class _NavigationState extends State<Navigation> {
-  Future<FirebaseApp> _initializeFirebase() async {
-    FirebaseApp firebaseApp = await Firebase.initializeApp();
-    return firebaseApp;
-  }
-
   int currentTab = 0;
   final List<Widget> screens = [
     const Dashboard(),
@@ -96,30 +93,46 @@ class _NavigationState extends State<Navigation> {
         bucket: bucket,
         child: currentScreen,
       ),
-      floatingActionButton: Container(
-        height: 70,
-        width: 70,
-        child: FittedBox(
-          child: FloatingActionButton(
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const Add()));
-            },
-            child: const Icon(
-              Icons.add,
-              size: 40,
-            ),
+      floatingActionButton: ExpandableFab(children: [
+        ActionButton(
+          icon: const Icon(
+            Icons.calendar_today,
+            color: Colors.white,
           ),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const AddDaily()),
+            );
+          },
         ),
-      ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        ActionButton(
+          icon: const Icon(
+            Icons.task,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const AddTask()),
+            );
+          },
+        ),
+        ActionButton(
+          icon: const Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            print('add');
+          },
+        ),
+      ], distance: 120),
       bottomNavigationBar: BottomAppBar(
-        shape: const CircularNotchedRectangle(),
-        notchMargin: 10,
         child: Container(
           height: 80,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
               MaterialButton(
                 minWidth: 40,
@@ -205,7 +218,13 @@ class _NavigationState extends State<Navigation> {
         .push(MaterialPageRoute(builder: (context) => Profile()));
   }
 
-  void _navigateToAdd(BuildContext context) {
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => Add()));
+  void _navigateToAddDaily(BuildContext context) {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => AddDaily()));
+  }
+
+  void _navigateToAddTask(BuildContext context) {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => AddTask()));
   }
 }

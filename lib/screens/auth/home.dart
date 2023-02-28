@@ -5,7 +5,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:healthy_planner/screens/auth/signin.dart';
-
+import 'package:healthy_planner/widget/navigation.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -27,7 +27,7 @@ class _HomePageState extends State<HomePage> {
             future: _initializeFirebase(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
-                return const SignIn();
+                return const Navigation();
               }
               return const Center(
                 child: CircularProgressIndicator(),
