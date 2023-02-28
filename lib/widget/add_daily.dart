@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:healthy_planner/utils/theme.dart';
+import 'package:date_field/date_field.dart';
 
 class AddDaily extends StatefulWidget {
   const AddDaily({super.key, this.restorationId});
@@ -40,7 +41,7 @@ class _AddDailyState extends State<AddDaily> with RestorationMixin {
           initialEntryMode: DatePickerEntryMode.calendarOnly,
           initialDate: DateTime.fromMillisecondsSinceEpoch(arguments! as int),
           firstDate: DateTime(2022),
-          lastDate: DateTime(2025),
+          lastDate: DateTime(2030),
         );
       },
     );
@@ -91,140 +92,190 @@ class _AddDailyState extends State<AddDaily> with RestorationMixin {
         ),
       ),
       body: Container(
-        height: 400,
         width: MediaQuery.of(context).size.width,
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-            color: blueBackground,
-            borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(40),
-                bottomRight: Radius.circular(40))),
         child: SingleChildScrollView(
-          padding: const EdgeInsets.only(left: 10),
           child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  'Name',
-                  style: GoogleFonts.poppins(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white,
-                  ),
-                ),
-                TextFormField(
-                    decoration: const InputDecoration(
-                  border: UnderlineInputBorder(),
-                  hintText: 'Linear Algebra Class',
-                  hintStyle: TextStyle(
-                    color: Colors.white,
-                  ),
-                )),
-                const SizedBox(
-                  height: 10,
-                ),
-                Text(
-                  'Category',
-                  style: GoogleFonts.poppins(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white,
-                  ),
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                Row(
-                  children: [
-                    Container(
-                      width: 100,
-                      child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                            backgroundColor: button1,
+            children: [
+              Container(
+                padding: const EdgeInsets.only(
+                    top: 20, bottom: 20, left: 30, right: 20),
+                height: 400,
+                decoration: BoxDecoration(
+                    color: blueBackground,
+                    borderRadius: const BorderRadius.only(
+                        bottomLeft: Radius.circular(40),
+                        bottomRight: Radius.circular(40))),
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Name',
+                        style: GoogleFonts.poppins(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
+                        ),
+                      ),
+                      TextFormField(
+                          decoration: const InputDecoration(
+                        border: UnderlineInputBorder(),
+                        hintText: 'Linear Algebra Class',
+                        hintStyle: TextStyle(
+                          color: Colors.white,
+                        ),
+                      )),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        'Category',
+                        style: GoogleFonts.poppins(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Row(
+                        children: [
+                          Container(
+                            width: 100,
+                            child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                  backgroundColor: button1,
+                                ),
+                                onPressed: () {},
+                                child: Text(
+                                  'Study',
+                                  style: GoogleFonts.poppins(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      color: blueBackground),
+                                )),
                           ),
-                          onPressed: () {},
-                          child: Text(
-                            'Study',
-                            style: GoogleFonts.poppins(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                color: blueBackground),
-                          )),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.only(left: 10),
-                      width: 100,
-                      child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                            backgroundColor: button1,
+                          Container(
+                            padding: const EdgeInsets.only(left: 10),
+                            width: 100,
+                            child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                  backgroundColor: button1,
+                                ),
+                                onPressed: () {},
+                                child: Text(
+                                  'Work',
+                                  style: GoogleFonts.poppins(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      color: blueBackground),
+                                )),
                           ),
-                          onPressed: () {},
-                          child: Text(
-                            'Work',
-                            style: GoogleFonts.poppins(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                color: blueBackground),
-                          )),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.only(left: 10),
-                      width: 100,
-                      child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                            backgroundColor: button1,
+                          Container(
+                            padding: const EdgeInsets.only(left: 10),
+                            width: 100,
+                            child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                  backgroundColor: button1,
+                                ),
+                                onPressed: () {},
+                                child: Text(
+                                  'Others',
+                                  style: GoogleFonts.poppins(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      color: blueBackground),
+                                )),
                           ),
-                          onPressed: () {},
-                          child: Text(
-                            'Others',
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Text(
+                        'Date',
+                        style: GoogleFonts.poppins(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.only(
+                            right: MediaQuery.of(context).size.width / 2),
+                        child: DateTimeFormField(
+                          decoration: InputDecoration(
+                            hintStyle: const TextStyle(color: Colors.white),
+                            border: const UnderlineInputBorder(),
+                            suffixIcon: IconButton(
+                              onPressed: () {
+                                _restorableDatePickerRouteFuture.present();
+                              },
+                              icon: Icon(Icons.calendar_month),
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        child: Row(children: [
+                          Checkbox(
+                            value: false,
+                            onChanged: (value) {},
+                            checkColor: Colors.white,
+                            activeColor: Colors.white,
+                          ),
+                          Text(
+                            'Repeat',
                             style: GoogleFonts.poppins(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                color: blueBackground),
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white,
+                            ),
+                          )
+                        ]),
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      Text(
+                        'Time',
+                        style: GoogleFonts.poppins(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ]),
+              ),
+              Container(
+                color: Colors.transparent,
+                padding: const EdgeInsets.only(
+                    top: 10, left: 30, right: 20, bottom: 20),
+                alignment: Alignment.centerLeft,
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Text('Reminder',
+                          style: GoogleFonts.poppins(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: blueBackground,
                           )),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                Text(
-                  'Date',
-                  style: GoogleFonts.poppins(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white,
-                  ),
-                ),
-                Container(
-                  width: 100,
-                  child: TextFormField(
-                      decoration: InputDecoration(
-                    border: const UnderlineInputBorder(),
-                    suffix: IconButton(
-                      onPressed: () {
-                        _restorableDatePickerRouteFuture.present();
-                      },
-                      icon: const Icon(Icons.calendar_month),
-                      color: Colors.white,
-                    ),
-                  )),
-                ),
-                Container(
-                    alignment: Alignment.centerLeft,
-                    child: Checkbox(
-                      value: false,
-                      onChanged: (value) {},
-                      checkColor: Colors.white,
-                    )),
-              ]),
+                    ]),
+              ),
+            ],
+          ),
         ),
       ),
     );
