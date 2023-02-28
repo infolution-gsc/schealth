@@ -1,7 +1,7 @@
 // Sign In or Log in Page
 // This page is used to sign in or log in to the app
 
-// ignore_for_file: depend_on_referenced_packages, unused_import, avoid_print, no_leading_underscores_for_local_identifiers
+// ignore_for_file: depend_on_referenced_packages, unused_import, avoid_print, no_leading_underscores_for_local_identifiers, unused_field
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -36,20 +36,28 @@ class _SignUpState extends State<SignUp> {
   }  
   bool isEnable = false;
 
-  static Future<User?> loginUsingEmail(
+  static Future<User?> signUpUsingEmail(
       {required String email,
       required String password,
+      required String name,
       required BuildContext context}) async {
     FirebaseAuth auth = FirebaseAuth.instance;
     User? user;
     try {
-      UserCredential userCredential = await auth.signInWithEmailAndPassword(
-          email: email, password: password);
-      user = userCredential.user;
+        UserCredential credential = await auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+      user = credential.user;
+      await user?.updateDisplayName(name);
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        print("No user found for that email");
+      if (e.code == 'weak-password') {
+        print('The password provided is too weak.');
+      } else if (e.code == 'email-already-in-use') {
+        print('The account already exists for that email.');
       }
+    } catch (e) {
+      print(e);
     }
     return user;
   }
@@ -68,13 +76,8 @@ class _SignUpState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
     // Text field controller
-    TextEditingController _nameController = TextEditingController();
-    TextEditingController _emailController = TextEditingController();
-    TextEditingController _passwordController = TextEditingController();
-    TextEditingController _confirmPasswordController = TextEditingController();
 
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
         leading: IconButton(
@@ -89,13 +92,14 @@ class _SignUpState extends State<SignUp> {
       body: Container(
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: SingleChildScrollView(
-            padding: const EdgeInsets.only(top: 75),
+            physics: const BouncingScrollPhysics(),
+            padding: const EdgeInsets.only(top: 20),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Container(
-                    margin: const EdgeInsets.only(top: 20),
+                    margin: const EdgeInsets.only(top: 50),
                     child: Image.asset(
                       // Import imgae from folder assets
                       'assets/illustration/signup.png',
@@ -104,7 +108,7 @@ class _SignUpState extends State<SignUp> {
                       alignment: Alignment.center,
                     )),
                 const SizedBox(
-                  height: 30,
+                  height: 25,
                 ),
                 Text(
                   'Let’s Get Started!',
@@ -133,9 +137,9 @@ class _SignUpState extends State<SignUp> {
                 child: Column(
                   children: [
                     Material(
-                      // shadowColor: const Color.fromARGB(150, 0, 0, 0),
+                      shadowColor: const Color.fromARGB(150, 0, 0, 0),
                       borderRadius: const BorderRadius.all(Radius.circular(50)),
-                      elevation: 0,
+                      elevation: 10,
                       child: TextFormField(
                         style: const TextStyle(
                           color: Color(0xFF5B96F8),
@@ -150,29 +154,27 @@ class _SignUpState extends State<SignUp> {
                           }
                           return null;
                         },
-                        decoration:  InputDecoration(
-                          filled: true,
-                          fillColor: fillName ? const Color.fromARGB(0, 0, 0, 0): const Color(0xFFF5F5F5),
-                          prefixIcon: const Padding(
-                            padding:  EdgeInsetsDirectional.only(start: 20.0, end: 20.0),
-                            child: Icon(Icons.tag_faces),
-                          ),
-                          prefixIconColor: selectedName ? const Color(0xFF5B96F8) : const Color(0xFFC2C2C2),
-                          enabledBorder: const  OutlineInputBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(50)),
-                              borderSide: BorderSide( width: 0, color: Color(0xFFF5F5F5)),
+                        decoration: const  InputDecoration(
+                          prefixIcon: Padding(
+                              padding:  EdgeInsetsDirectional.only(start: 20.0, end: 20.0),
+                              child: Icon(Icons.mail),
                             ),
-                          focusedBorder: const OutlineInputBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(50)),
-                              borderSide: BorderSide( width: 1, color: Color(0xFF5B96F8)),
-                            ),
+                            prefixIconColor: Color(0xFF5B96F8),
+                            enabledBorder:  OutlineInputBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(50)),
+                                borderSide: BorderSide( width: 0, color: Color(0xFFF5F5F5)),
+                              ),
+                            focusedBorder:  OutlineInputBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(50)),
+                                borderSide: BorderSide( width: 1, color: Color(0xFF5B96F8)),
+                              ),
                           hintText: 'Name',
-                          hintStyle: const TextStyle(
+                          hintStyle:  TextStyle(
                             color: Color(0xFFC2C2C2),
                             fontWeight: FontWeight.bold
                           ),
-                          focusColor: const Color(0xFF5B96F8),
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                          focusColor:  Color(0xFF5B96F8),
+                          contentPadding:  EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                         ),
                         ),
                     ),
@@ -182,10 +184,13 @@ class _SignUpState extends State<SignUp> {
                     ),
 
                     Material(
+                      shadowColor: const Color.fromARGB(150, 0, 0, 0),
                       borderRadius: const BorderRadius.all(Radius.circular(50)),
+                      elevation: 10,
                       child: TextFormField(
                         textInputAction: TextInputAction.next,
-
+                        scrollPadding: const EdgeInsets.only(
+                            bottom: 40),
                         style: const TextStyle(
                           color: Color(0xFF5B96F8),
                           fontSize: 12,
@@ -200,24 +205,22 @@ class _SignUpState extends State<SignUp> {
                           }
                           return null;
                         },
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: fillEmail ? const Color.fromARGB(0, 0, 0, 0): const Color(0xFFF5F5F5),
-                          prefixIcon: const Padding(
+                        decoration: const InputDecoration(
+                          prefixIcon: Padding(
                             padding:  EdgeInsetsDirectional.only(start: 20.0, end: 20.0),
                             child: Icon(Icons.mail),
                           ),
-                          prefixIconColor: selectedEmail ? const Color(0xFF5B96F8) : const Color(0xFFC2C2C2),
-                          focusedBorder: const OutlineInputBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(50)),
-                              borderSide: BorderSide( width: 1, color: Color(0xFF5B96F8)),
-                            ),
-                          enabledBorder: const OutlineInputBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(50)),
-                              borderSide: BorderSide( width: 0, color: Color(0xFFF5F5F5)),
-                            ),
+                          prefixIconColor: Color(0xFF5B96F8),
+                            enabledBorder:  OutlineInputBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(50)),
+                                borderSide: BorderSide( width: 0, color: Color(0xFFF5F5F5)),
+                              ),
+                            focusedBorder:  OutlineInputBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(50)),
+                                borderSide: BorderSide( width: 1, color: Color(0xFF5B96F8)),
+                              ),
                           hintText: 'Email',
-                          hintStyle:const TextStyle(
+                          hintStyle: TextStyle(
                             color: Color(0xFFC2C2C2),
                             fontWeight: FontWeight.bold
                           ),
@@ -231,7 +234,9 @@ class _SignUpState extends State<SignUp> {
                     ),
 
                     Material(
+                      shadowColor: const Color.fromARGB(150, 0, 0, 0),
                       borderRadius: const BorderRadius.all(Radius.circular(50)),
+                      elevation: 10,
                       child: TextFormField(
                         textInputAction: TextInputAction.next,
 
@@ -262,44 +267,26 @@ class _SignUpState extends State<SignUp> {
                         //     selectedPass = false;
                         //   });
                         // },
-                        decoration: InputDecoration(
-                          prefixIcon: const Padding(
+                        decoration: const InputDecoration(
+                          prefixIcon: Padding(
                             padding:  EdgeInsetsDirectional.only(start: 20.0, end: 20.0),
                             child: Icon(Icons.key_rounded),
                           ),
-                          filled: true,
-                          fillColor: fillPass ? const Color.fromARGB(0, 0, 0, 0): const Color(0xFFF5F5F5),
-                          prefixIconColor: selectedPass ? const Color(0xFF5B96F8) : const Color(0xFFC2C2C2),
-                          suffixIcon: IconButton(
-                              icon: Icon(
-                                // Based on passwordVisible state choose the icon
-                                passwordVisible
-                                ? Icons.visibility
-                                : Icons.visibility_off,
-                                color: Theme.of(context).primaryColorDark,
-                                ),
-                              onPressed: () {
-                                // text is not show when press
-
-                                setState(() {
-                                    passwordVisible = !passwordVisible;
-                                });
-                              },
+                          prefixIconColor: Color(0xFF5B96F8),
+                            enabledBorder:  OutlineInputBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(50)),
+                                borderSide: BorderSide( width: 0, color: Color(0xFFF5F5F5)),
                               ),
-                          focusedBorder: const OutlineInputBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(50)),
-                              borderSide: BorderSide( width: 1, color: Color(0xFF5B96F8)),
-                            ),
-                          enabledBorder: const  OutlineInputBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(50)),
-                              borderSide: BorderSide( width: 0, color: Color(0xFFF5F5F5)),
-                            ),
+                            focusedBorder:  OutlineInputBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(50)),
+                                borderSide: BorderSide( width: 1, color: Color(0xFF5B96F8)),
+                              ),
                           hintText: 'Password',
-                          hintStyle: const TextStyle(
+                          hintStyle:  TextStyle(
                             color: Color(0xFFC2C2C2),
                             fontWeight: FontWeight.bold
                           ),
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                          contentPadding:  EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                         ),
                         ),
                     ),
@@ -309,7 +296,9 @@ class _SignUpState extends State<SignUp> {
                     ),
 
                     Material(
+                      shadowColor: const Color.fromARGB(150, 0, 0, 0),
                       borderRadius: const BorderRadius.all(Radius.circular(50)),
+                      elevation: 10,
                       child: TextFormField(
                           textInputAction: TextInputAction.done,
 
@@ -340,52 +329,26 @@ class _SignUpState extends State<SignUp> {
                         //     selectedConfirm = false;
                         //   });
                         // },
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: fillConfirm ? const Color.fromARGB(0, 0, 0, 0): const Color(0xFFF5F5F5),
-                            prefixIcon: const  Padding(
+                          decoration: const InputDecoration(
+                            prefixIcon:  Padding(
                               padding:   EdgeInsetsDirectional.only(start: 20.0, end: 20.0),
                               child: Icon(Icons.key_rounded)
                             ),
-                            prefixIconColor: selectedConfirm ? const Color(0xFF5B96F8) : const Color(0xFFC2C2C2),
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                // Based on passwordVisible state choose the icon
-                                passwordVisible
-                                ? Icons.visibility
-                                : Icons.visibility_off,
-                                color: Theme.of(context).primaryColorDark,
-                                ),
-                              onPressed: () {
-                                // text is not show when press
-
-                                setState(() {
-                                    passwordVisible = !passwordVisible;
-                                });
-                              },
+                            prefixIconColor: Color(0xFF5B96F8),
+                            enabledBorder:  OutlineInputBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(50)),
+                                borderSide: BorderSide( width: 0, color: Color(0xFFF5F5F5)),
                               ),
-                            focusColor: const Color(0xFFF5F5F5),
-                            focusedBorder: const OutlineInputBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(50)),
-                              borderSide: BorderSide( width: 1, color: Color(0xFF5B96F8)),
-                            ),
-                            // border: OutlineInputBorder(
-                            //   borderRadius: BorderRadius.all(Radius.circular(50)),
-                            // ),
-                            enabledBorder: const  OutlineInputBorder(
-                              borderRadius: BorderRadius.all(Radius.circular(50)),
-                              borderSide: BorderSide( width: 0, color: Color(0xFFF5F5F5)),
-                            ),
-                            // enabledBorder:  OutlineInputBorder(
-                            //     borderRadius: BorderRadius.all(Radius.circular(50)),
-                            //     borderSide: BorderSide( width: 1, color: Color(0xFF5B96F8)),
-                            //   ),
+                            focusedBorder:  OutlineInputBorder(
+                                borderRadius: BorderRadius.all(Radius.circular(50)),
+                                borderSide: BorderSide( width: 1, color: Color(0xFF5B96F8)),
+                              ),
                             hintText: 'Confirm Password',
-                            hintStyle: const TextStyle(
+                            hintStyle:  TextStyle(
                               color: Color(0xFFC2C2C2),
                               fontWeight: FontWeight.bold
                             ),
-                            contentPadding: const  EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                            contentPadding:  EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                           ),
                         ),
                     ),
@@ -403,16 +366,17 @@ class _SignUpState extends State<SignUp> {
                     minimumSize: const Size.fromHeight(50), // NEW
                   ),
                   onPressed: () async {
-                    User? user = await loginUsingEmail(
+                    User? user = await signUpUsingEmail(
                         email: _emailController.text,
                         password: _passwordController.text,
+                        name: _nameController.text,
                         context: context);
                     print(user);
                     if (_formKey.currentState!.validate()) {
                       if (user != null) {
                         // ignore: use_build_context_synchronously
                         Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: (context) => const Dashboard()));
+                            builder: (context) => const Navigation()));
                       }
                       // ignore: empty_statements
                     };

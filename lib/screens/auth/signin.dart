@@ -30,7 +30,7 @@ class _SignInState extends State<SignIn> {
   checkIfLogin() async {
     auth.authStateChanges().listen((User? user) {
       if(user != null && mounted){
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Dashboard()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Navigation()));
       }
     });
   }
@@ -116,6 +116,7 @@ class _SignInState extends State<SignIn> {
       body: Container(
           padding: const EdgeInsets.symmetric(horizontal: 24),
           child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
             padding: const EdgeInsets.only(top: 20),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -224,55 +225,58 @@ class _SignInState extends State<SignIn> {
                               }
                               return null;
                             },
-                            obscureText: _passwordVisible,
+                            obscureText: true,
                             keyboardType: TextInputType.visiblePassword,
-                            decoration: InputDecoration(
-                              prefixIcon: const Padding(
+                            decoration: const InputDecoration(
+                              prefixIcon:  Padding(
                                 padding:  EdgeInsetsDirectional.only(start: 20.0, end: 20.0),
                                 child: Icon(Icons.key_rounded),
                               ),
-                              prefixIconColor: const  Color(0xFF5B96F8),
-                              suffixIcon: IconButton(
-                                icon: Icon(
-                                  // Based on _passwordVisible state choose the icon
-                                  _passwordVisible
-                                  ? Icons.visibility
-                                  : Icons.visibility_off,
-                                  color: Theme.of(context).primaryColorDark,
-                                  ),
-                                onPressed: () {
-                                  // text is not show when press
-                                  setState(() {
-                                      _passwordVisible = !_passwordVisible;
-                                  });
-                                },
-                                ),
+                              prefixIconColor:   Color(0xFF5B96F8),
                               // border: OutlineInputBorder(
                               //   borderRadius: BorderRadius.all(Radius.circular(50)),
                               // ),
-                              enabledBorder: const  OutlineInputBorder(
+                              enabledBorder:   OutlineInputBorder(
                                 borderRadius: BorderRadius.all(Radius.circular(50)),
                                 borderSide: BorderSide( width: 0, color: Color(0xFFF5F5F5)),
                               ),
-                              focusedBorder: const   OutlineInputBorder(
+                              focusedBorder:    OutlineInputBorder(
                                   borderRadius: BorderRadius.all(Radius.circular(50)),
                                   borderSide: BorderSide( width: 1, color: Color(0xFF5B96F8)),
                                 ),
                               hintText: 'Password',
-                              hintStyle: const  TextStyle(
+                              hintStyle:   TextStyle(
                                 color: Color(0xFF5B96F8),
                                 fontWeight: FontWeight.bold
                               ),
                               alignLabelWithHint: false,
-                              contentPadding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                              contentPadding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                             ),
                           ),
                       ),
                       ],
                     )),
 
-                const SizedBox(
-                  height: 20,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        // Navigator.push(
+                        //     context,
+                        //     MaterialPageRoute(
+                        //         builder: (context) => const ForgotPassword()));
+                      },
+                      child: Text(
+                        'Forgot Password?',
+                        style: GoogleFonts.poppins(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: const Color(0xFF9E9E9E),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
 
                 ElevatedButton(
@@ -328,7 +332,7 @@ class _SignInState extends State<SignIn> {
                       if(user != null){
                           // ignore: use_build_context_synchronously
                           Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(builder: (context) => const Dashboard()
+                            MaterialPageRoute(builder: (context) => const Navigation()
                             )
                           );
                         }
@@ -352,7 +356,7 @@ class _SignInState extends State<SignIn> {
                     )),
 
                 const SizedBox(
-                  height: 20,
+                  height: 10,
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,

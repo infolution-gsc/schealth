@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:healthy_planner/utils/theme.dart';
+import 'package:healthy_planner/widget/logout_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -10,6 +12,35 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+
+  late String name;
+  late String email;
+  late String photoUrl;
+  late bool emailVerified;
+  late String uid;
+
+  @override
+  void initState() {
+    super.initState();
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      print(user);
+        // Name, email address, and profile photo URL
+         name = user.displayName.toString();
+         email = user.email.toString();
+         photoUrl = user.photoURL.toString();
+
+        // Check if user's email is verified
+         emailVerified = user.emailVerified;
+
+        // The user's ID, unique to the Firebase project. Do NOT use this value to
+        // authenticate with your backend server, if you have one. Use
+        // User.getIdToken() instead.
+         uid = user.uid;
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,63 +58,86 @@ class _ProfileState extends State<Profile> {
           )
         ],
       ),
-      body: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Column(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              MaterialButton(
-                minWidth: 40,
-                child: const CircleAvatar(
-                  foregroundImage:
-                      AssetImage('assets/illustration/student.png'),
-                ),
-                onPressed: () {},
+              Column(
+                children: [
+                  MaterialButton(
+                    minWidth: 40,
+                    child: CircleAvatar(
+                      radius: 30,
+                      foregroundImage:
+                          // photoUrl.isEmpty ? const AssetImage('assets/illustration/student.png') : NetworkImage(photoUrl),
+                          NetworkImage(photoUrl),
+                    ),
+                    onPressed: () {},
+                  ),
+                ],
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisSize: MainAxisSize.max,
+                    children: [
+                      Text(
+                        name.isEmpty ? 'No Name' : name,
+                        style: GoogleFonts.poppins(
+                          fontSize: 30,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        textAlign: TextAlign.left,
+                      )
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        email.isEmpty ? 'No Email' : email,
+                        style: GoogleFonts.poppins(
+                            fontSize: 15, fontWeight: FontWeight.w400),
+                      )
+                    ],
+                  ),
+                  Row(children: [
+                    MaterialButton(
+                      onPressed: () {},
+                      minWidth: 140,
+                      color: blueColor,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                      child: Text(
+                        'Edit Profile',
+                        style: GoogleFonts.poppins(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ])
+                ],
               ),
             ],
           ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+          const SizedBox(
+            height: 20,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Text(
-                    'Ji Eun',
-                    style: GoogleFonts.poppins(
-                      fontSize: 30,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    textAlign: TextAlign.left,
-                  )
-                ],
-              ),
-              Row(
-                children: [
-                  Text(
-                    'jiunlee@gmail.com',
-                    style: GoogleFonts.poppins(
-                        fontSize: 15, fontWeight: FontWeight.w400),
-                  )
-                ],
-              ),
-              Row(children: [
-                MaterialButton(
-                  onPressed: () {},
-                  minWidth: 140,
-                  color: blueColor,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
-                  child: Text(
-                    'Edit Profile',
-                    style: GoogleFonts.poppins(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ])
+               Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: const [
+                  LogoutButton()
+                ]
+               )
             ],
           )
         ],
@@ -91,3 +145,5 @@ class _ProfileState extends State<Profile> {
     );
   }
 }
+
+

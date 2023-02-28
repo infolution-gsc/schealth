@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:healthy_planner/screens/auth/signin.dart';
 import 'package:healthy_planner/widget/navigation.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -15,23 +17,31 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Future<FirebaseApp> _initializeFirebase() async {
-    FirebaseApp firebaseApp = await Firebase.initializeApp();
-    return firebaseApp;
+
+  bool isLogin = false;
+
+
+  checkIfLogin() async {
+    var auth = FirebaseAuth.instance;
+    auth.authStateChanges().listen((User? user) {
+      if(user != null && mounted){
+        // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Navigation()));
+        setState(() {
+          isLogin = true;
+        });
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    checkIfLogin();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: FutureBuilder(
-            future: _initializeFirebase(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.done) {
-                return const Navigation();
-              }
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }));
+        body: isLogin ? const Navigation() : const SignIn());
   }
 }
