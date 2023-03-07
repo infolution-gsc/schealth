@@ -130,6 +130,9 @@ class _NavigationState extends State<Navigation> {
       ], distance: 120),
       bottomNavigationBar: BottomAppBar(
         child: Container(
+          decoration: const BoxDecoration(
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(40), topRight: Radius.circular(40))),
           height: 80,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,

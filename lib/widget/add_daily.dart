@@ -118,10 +118,11 @@ class _AddDailyState extends State<AddDaily> with RestorationMixin {
                       ),
                       TextFormField(
                           decoration: const InputDecoration(
-                        border: UnderlineInputBorder(),
-                        hintText: 'Linear Algebra Class',
-                        hintStyle: TextStyle(
-                          color: Colors.white,
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: Colors.white),
                         ),
                       )),
                       const SizedBox(
@@ -212,12 +213,17 @@ class _AddDailyState extends State<AddDaily> with RestorationMixin {
                         child: DateTimeFormField(
                           decoration: InputDecoration(
                             hintStyle: const TextStyle(color: Colors.white),
-                            border: const UnderlineInputBorder(),
+                            enabledBorder: const UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white),
+                            ),
+                            focusedBorder: const UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white),
+                            ),
                             suffixIcon: IconButton(
                               onPressed: () {
                                 _restorableDatePickerRouteFuture.present();
                               },
-                              icon: Icon(Icons.calendar_month),
+                              icon: const Icon(Icons.calendar_month),
                               color: Colors.white,
                             ),
                           ),
@@ -262,6 +268,7 @@ class _AddDailyState extends State<AddDaily> with RestorationMixin {
                 alignment: Alignment.centerLeft,
                 child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(
                         height: 20,
@@ -272,6 +279,81 @@ class _AddDailyState extends State<AddDaily> with RestorationMixin {
                             fontWeight: FontWeight.w500,
                             color: blueBackground,
                           )),
+                      TextFormField(
+                          decoration: InputDecoration(
+                        suffixIcon: Icon(
+                          Icons.keyboard_arrow_down_rounded,
+                          color: blueBackground,
+                        ),
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: blueBackground),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: blueBackground),
+                        ),
+                      )),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Text('Note',
+                          style: GoogleFonts.poppins(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: blueBackground,
+                          )),
+                      TextFormField(
+                          decoration: InputDecoration(
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: blueBackground),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: blueBackground),
+                        ),
+                      )),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Text('Location',
+                          style: GoogleFonts.poppins(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: blueBackground,
+                          )),
+                      TextFormField(
+                          decoration: InputDecoration(
+                        suffixIcon: Icon(
+                          Icons.location_pin,
+                          color: blueBackground,
+                        ),
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: blueBackground),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: blueBackground),
+                        ),
+                      )),
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      Center(
+                        child: Container(
+                          height: 50,
+                          width: 300,
+                          decoration: BoxDecoration(
+                              color: blueBackground,
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(30))),
+                          child: Center(
+                              child: Text(
+                            "Add Schedule",
+                            style: GoogleFonts.poppins(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w500,
+                              color: Colors.white,
+                            ),
+                          )),
+                        ),
+                      ),
                     ]),
               ),
             ],
