@@ -1,9 +1,10 @@
 // Home dart
 // Main place for navigation between page
 
-// ignore_for_file: depend_on_referenced_packages
+// ignore_for_file: depend_on_referenced_packages, sort_child_properties_last
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:healthy_planner/widget/add_daily.dart';
 import 'package:healthy_planner/widget/add_task.dart';
@@ -39,6 +40,14 @@ class _NavigationState extends State<Navigation> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          // Status bar color
+          statusBarColor: Color(0xFFFAFAFA),
+
+          // Status bar brightness (optional)
+          statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
+          statusBarBrightness: Brightness.light, // For iOS (dark icons)
+        ),
         toolbarHeight: 100,
         elevation: 0,
         backgroundColor: Colors.transparent,

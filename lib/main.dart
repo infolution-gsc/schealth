@@ -6,14 +6,11 @@ import 'package:healthy_planner/screens/auth/home.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-
-
 void main() {
   runApp(const HealthyDailyPlanner());
 }
 
 class HealthyDailyPlanner extends StatelessWidget {
-
   Future<FirebaseApp> _initializeFirebase() async {
     FirebaseApp firebaseApp = await Firebase.initializeApp();
     return firebaseApp;
@@ -27,15 +24,15 @@ class HealthyDailyPlanner extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       // home: HomePage(),
       home: FutureBuilder(
-        future: _initializeFirebase(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return const HomePage();
-          }
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
-      }),
+          future: _initializeFirebase(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return const HomePage();
+            }
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }),
       theme: ThemeData(
         textTheme: GoogleFonts.poppinsTextTheme(),
       ),

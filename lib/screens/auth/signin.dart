@@ -4,6 +4,7 @@
 // ignore_for_file: depend_on_referenced_packages, unused_import, avoid_print, no_leading_underscores_for_local_identifiers, unused_field
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:healthy_planner/screens/auth/signup.dart';
@@ -12,7 +13,6 @@ import 'package:healthy_planner/widget/navigation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:healthy_planner/widget/transitions/size_transitions.dart';
 import 'package:healthy_planner/widget/transitions/slide_transitions.dart';
-
 
 class SignIn extends StatefulWidget {
   const SignIn({Key? key}) : super(key: key);
@@ -29,8 +29,9 @@ class _SignInState extends State<SignIn> {
 
   checkIfLogin() async {
     auth.authStateChanges().listen((User? user) {
-      if(user != null && mounted){
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => const Navigation()));
+      if (user != null && mounted) {
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => const Navigation()));
       }
     });
   }
@@ -39,22 +40,21 @@ class _SignInState extends State<SignIn> {
   late final TextEditingController _emailController;
   late final TextEditingController _passwordController;
 
-   @override
-    void initState(){
-      super.initState();
-      checkIfLogin();
-      _emailController = TextEditingController();
-      _passwordController = TextEditingController();
-      _passwordVisible=true;
-    }
+  @override
+  void initState() {
+    super.initState();
+    checkIfLogin();
+    _emailController = TextEditingController();
+    _passwordController = TextEditingController();
+    _passwordVisible = true;
+  }
 
-     @override
+  @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
-
 
   static Future<User?> loginUsingEmail(
       {required String email,
@@ -75,12 +75,13 @@ class _SignInState extends State<SignIn> {
   }
 
   static Future<User?> signInWithGoogle() async {
-  // Trigger the authentication flow
+    // Trigger the authentication flow
     User? user;
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
     // Obtain the auth details from the request
-    final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+    final GoogleSignInAuthentication? googleAuth =
+        await googleUser?.authentication;
 
     // Create a new credential
     final credential = GoogleAuthProvider.credential(
@@ -88,7 +89,8 @@ class _SignInState extends State<SignIn> {
       idToken: googleAuth?.idToken,
     );
 
-    UserCredential userCredential =  await FirebaseAuth.instance.signInWithCredential(credential);
+    UserCredential userCredential =
+        await FirebaseAuth.instance.signInWithCredential(credential);
     user = userCredential.user;
     return user;
     // Once signed in, return the UserCredential
@@ -106,6 +108,14 @@ class _SignInState extends State<SignIn> {
       resizeToAvoidBottomInset: false,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        systemOverlayStyle: const SystemUiOverlayStyle(
+          // Status bar color
+          statusBarColor: Color(0xFFFAFAFA),
+
+          // Status bar brightness (optional)
+          statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
+          statusBarBrightness: Brightness.light, // For iOS (dark icons)
+        ),
         leading: IconButton(
           onPressed: () {},
           icon: const Icon(Icons.arrow_back_rounded, color: Color(0xFF2756A5)),
@@ -161,61 +171,66 @@ class _SignInState extends State<SignIn> {
                     child: Column(
                       children: [
                         Material(
-                        shadowColor: const Color.fromARGB(150, 0, 0, 0),
-                        borderRadius: const BorderRadius.all(Radius.circular(50)),
-                        elevation: 10,
-                        child: TextFormField(
-                          style: const TextStyle(
-                            color: Color(0xFF5B96F8),
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500
-                          ),
-                          controller: _emailController,
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'Please enter email';
-                            } else if (!value.contains('@')) {
-                              return 'Please enter a valid email address';
-                            }
-                            return null;
-                          },
-                          textInputAction: TextInputAction.next,
-                          decoration: const InputDecoration(
-                            prefixIcon: Padding(
-                              padding:  EdgeInsetsDirectional.only(start: 20.0, end: 20.0),
-                              child: Icon(Icons.mail),
-                            ),
-                            prefixIconColor: Color(0xFF5B96F8),
-                            enabledBorder:   OutlineInputBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(50)),
-                                borderSide: BorderSide( width: 0, color: Color(0xFFF5F5F5)),
+                          shadowColor: const Color.fromARGB(150, 0, 0, 0),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(50)),
+                          elevation: 10,
+                          child: TextFormField(
+                            style: const TextStyle(
+                                color: Color(0xFF5B96F8),
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500),
+                            controller: _emailController,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'Please enter email';
+                              } else if (!value.contains('@')) {
+                                return 'Please enter a valid email address';
+                              }
+                              return null;
+                            },
+                            textInputAction: TextInputAction.next,
+                            decoration: const InputDecoration(
+                              prefixIcon: Padding(
+                                padding: EdgeInsetsDirectional.only(
+                                    start: 20.0, end: 20.0),
+                                child: Icon(Icons.mail),
                               ),
-                            focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(50)),
-                                borderSide: BorderSide( width: 1, color: Color(0xFF5B96F8)),
+                              prefixIconColor: Color(0xFF5B96F8),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(50)),
+                                borderSide: BorderSide(
+                                    width: 0, color: Color(0xFFF5F5F5)),
                               ),
-                            hintText: 'Email',
-                            hintStyle: TextStyle(
-                              color: Color(0xFF5B96F8),
-                              fontWeight: FontWeight.bold
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(50)),
+                                borderSide: BorderSide(
+                                    width: 1, color: Color(0xFF5B96F8)),
+                              ),
+                              hintText: 'Email',
+                              hintStyle: TextStyle(
+                                  color: Color(0xFF5B96F8),
+                                  fontWeight: FontWeight.bold),
+                              contentPadding: EdgeInsets.symmetric(
+                                  horizontal: 30, vertical: 15),
                             ),
-                            contentPadding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
                           ),
-                          ),
-                      ),
+                        ),
                         const SizedBox(
                           height: 20,
                         ),
                         Material(
-                        shadowColor: const Color.fromARGB(150, 0, 0, 0),
-                        borderRadius: const BorderRadius.all(Radius.circular(50)),
-                        elevation: 10,
-                        child: TextFormField(
+                          shadowColor: const Color.fromARGB(150, 0, 0, 0),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(50)),
+                          elevation: 10,
+                          child: TextFormField(
                             style: const TextStyle(
-                              color: Color(0xFF5B96F8),
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500
-                            ),
+                                color: Color(0xFF5B96F8),
+                                fontSize: 12,
+                                fontWeight: FontWeight.w500),
                             controller: _passwordController,
                             validator: (value) {
                               if (value!.isEmpty) {
@@ -228,32 +243,37 @@ class _SignInState extends State<SignIn> {
                             obscureText: true,
                             keyboardType: TextInputType.visiblePassword,
                             decoration: const InputDecoration(
-                              prefixIcon:  Padding(
-                                padding:  EdgeInsetsDirectional.only(start: 20.0, end: 20.0),
+                              prefixIcon: Padding(
+                                padding: EdgeInsetsDirectional.only(
+                                    start: 20.0, end: 20.0),
                                 child: Icon(Icons.key_rounded),
                               ),
-                              prefixIconColor:   Color(0xFF5B96F8),
+                              prefixIconColor: Color(0xFF5B96F8),
                               // border: OutlineInputBorder(
                               //   borderRadius: BorderRadius.all(Radius.circular(50)),
                               // ),
-                              enabledBorder:   OutlineInputBorder(
-                                borderRadius: BorderRadius.all(Radius.circular(50)),
-                                borderSide: BorderSide( width: 0, color: Color(0xFFF5F5F5)),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(50)),
+                                borderSide: BorderSide(
+                                    width: 0, color: Color(0xFFF5F5F5)),
                               ),
-                              focusedBorder:    OutlineInputBorder(
-                                  borderRadius: BorderRadius.all(Radius.circular(50)),
-                                  borderSide: BorderSide( width: 1, color: Color(0xFF5B96F8)),
-                                ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(50)),
+                                borderSide: BorderSide(
+                                    width: 1, color: Color(0xFF5B96F8)),
+                              ),
                               hintText: 'Password',
-                              hintStyle:   TextStyle(
-                                color: Color(0xFF5B96F8),
-                                fontWeight: FontWeight.bold
-                              ),
+                              hintStyle: TextStyle(
+                                  color: Color(0xFF5B96F8),
+                                  fontWeight: FontWeight.bold),
                               alignLabelWithHint: false,
-                              contentPadding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                              contentPadding: EdgeInsets.symmetric(
+                                  horizontal: 30, vertical: 15),
                             ),
                           ),
-                      ),
+                        ),
                       ],
                     )),
 
@@ -301,7 +321,6 @@ class _SignInState extends State<SignIn> {
                       }
                       // ignore: empty_statements
                     }
-                    
                   },
                   child: Text(
                     'Login',
@@ -329,13 +348,11 @@ class _SignInState extends State<SignIn> {
                     onPressed: () async {
                       User? user = await signInWithGoogle();
                       print(user);
-                      if(user != null){
-                          // ignore: use_build_context_synchronously
-                          Navigator.of(context).pushReplacement(
-                            MaterialPageRoute(builder: (context) => const Navigation()
-                            )
-                          );
-                        }
+                      if (user != null) {
+                        // ignore: use_build_context_synchronously
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(
+                            builder: (context) => const Navigation()));
+                      }
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -364,7 +381,8 @@ class _SignInState extends State<SignIn> {
                     const Text('Don\'t have an account?'),
                     TextButton(
                       onPressed: () {
-                        Navigator.push(context, SlideTopRoute(page: const SignUp()));
+                        Navigator.push(
+                            context, SlideTopRoute(page: const SignUp()));
                       },
                       child: const Text(
                         'Sign Up',
