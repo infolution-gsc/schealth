@@ -5,16 +5,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:healthy_planner/widget/add_daily.dart';
-import 'package:healthy_planner/widget/add_task.dart';
+import 'package:healthy_planner/widget/add/add_daily.dart';
+import 'package:healthy_planner/widget/add/add_task.dart';
 import 'package:healthy_planner/screens/dashboard.dart';
 import 'package:healthy_planner/screens/health.dart';
 import 'package:healthy_planner/screens/profile.dart';
 import 'package:healthy_planner/screens/timer.dart';
 import 'package:healthy_planner/screens/task.dart';
 import 'package:healthy_planner/utils/theme.dart';
-import 'expendable_fab.dart';
-import 'action_button.dart';
 
 class Navigation extends StatefulWidget {
   const Navigation({Key? key}) : super(key: key);
@@ -93,41 +91,6 @@ class _NavigationState extends State<Navigation> {
         bucket: bucket,
         child: currentScreen,
       ),
-      floatingActionButton: ExpandableFab(children: [
-        ActionButton(
-          icon: const Icon(
-            Icons.calendar_today,
-            color: Colors.white,
-          ),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const AddDaily()),
-            );
-          },
-        ),
-        ActionButton(
-          icon: const Icon(
-            Icons.task,
-            color: Colors.white,
-          ),
-          onPressed: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const AddTask()),
-            );
-          },
-        ),
-        ActionButton(
-          icon: const Icon(
-            Icons.add,
-            color: Colors.white,
-          ),
-          onPressed: () {
-            print('add');
-          },
-        ),
-      ], distance: 120),
       bottomNavigationBar: BottomAppBar(
         child: Container(
           decoration: const BoxDecoration(
