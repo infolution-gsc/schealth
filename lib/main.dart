@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:healthy_planner/screens/auth/home.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:healthy_planner/widget/navigation.dart';
 
 void main() {
   runApp(const HealthyDailyPlanner());
@@ -27,7 +28,7 @@ class HealthyDailyPlanner extends StatelessWidget {
           future: _initializeFirebase(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
-              return const HomePage();
+              return const Navigation();
             }
             return const Center(
               child: CircularProgressIndicator(),

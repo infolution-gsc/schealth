@@ -49,14 +49,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.1"
-  circular_menu:
-    dependency: "direct main"
-    description:
-      name: circular_menu
-      sha256: "2d137191afac7c6f8688b5f9ed859b354dd300d665ea8ffeba7304e1ccbbd664"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.2.3"
   clock:
     dependency: transitive
     description:
@@ -113,6 +105,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.2"
+  date_picker_timeline:
+    dependency: "direct main"
+    description:
+      name: date_picker_timeline
+      sha256: d92956ddd6eb3070f5637b1514201342e739b6ed1ad830c365d64f9349f4f682
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.3"
   fake_async:
     dependency: transitive
     description:
