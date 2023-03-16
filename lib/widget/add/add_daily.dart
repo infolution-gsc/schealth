@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:healthy_planner/utils/theme.dart';
 import 'package:date_field/date_field.dart';
+import 'package:dropdown_textfield/dropdown_textfield.dart';
 
 class AddDaily extends StatefulWidget {
   const AddDaily({super.key, this.restorationId});
@@ -279,19 +280,31 @@ class _AddDailyState extends State<AddDaily> with RestorationMixin {
                             fontWeight: FontWeight.w500,
                             color: blueBackground,
                           )),
-                      TextFormField(
-                          decoration: InputDecoration(
-                        suffixIcon: Icon(
-                          Icons.keyboard_arrow_down_rounded,
-                          color: blueBackground,
-                        ),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: blueBackground),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: blueBackground),
-                        ),
-                      )),
+                      DropDownTextField(
+                          controller: SingleValueDropDownController(),
+                          clearOption: false,
+                          validator: (value) {
+                            if (value == null) {
+                              return "Required field";
+                            } else {
+                              return null;
+                            }
+                          },
+                          dropdownColor: Colors.white,
+                          searchDecoration: InputDecoration(
+                              border: UnderlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: blueBackground))),
+                          dropDownItemCount: 4,
+                          dropDownList: const [
+                            DropDownValueModel(
+                                name: '5 minutes before', value: "value1"),
+                            DropDownValueModel(
+                                name: '10 minutes before', value: "value1"),
+                            DropDownValueModel(
+                                name: '15 minutes before', value: "value1"),
+                            DropDownValueModel(name: 'custom', value: "value1"),
+                          ]),
                       const SizedBox(
                         height: 10,
                       ),
