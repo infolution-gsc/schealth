@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:healthy_planner/utils/theme.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:flutter_switch/flutter_switch.dart';
-import 'package:date_picker_timeline/date_picker_timeline.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -15,8 +14,9 @@ class Dashboard extends StatefulWidget {
 
 class _DashboardState extends State<Dashboard> {
   bool status = true;
-  CalendarController calendarController = CalendarController();
-  CalendarView calendarView = CalendarView.day;
+
+  int weekView = 1;
+  double heightCalendar = 144;
 
   @override
   Widget build(BuildContext context) {
@@ -75,11 +75,11 @@ class _DashboardState extends State<Dashboard> {
                           setState(() {
                             status = val;
                             if (val == true) {
-                              calendarView = CalendarView.day;
-                              calendarController.view = calendarView;
+                              weekView = 1;
+                              heightCalendar = 144;
                             } else {
-                              calendarView = CalendarView.month;
-                              calendarController.view = calendarView;
+                              weekView = 4;
+                              heightCalendar = 300;
                             }
                           });
                         },
@@ -87,41 +87,26 @@ class _DashboardState extends State<Dashboard> {
                     ),
                   ],
                 ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    DatePicker(
-                      DateTime.now(),
-                      initialSelectedDate: DateTime.now(),
-                      selectionColor: blueColor,
-                      selectedTextColor: Colors.white,
-                      height: 96,
-                      width: 67,
-                      onDateChange: (date) {
-                        // New date selected
-                        setState(() {});
-                      },
+                Container(
+                  height: heightCalendar,
+                  child: SfCalendar(
+                    view: CalendarView.month,
+                    showNavigationArrow: true,
+                    dataSource: MeetingDataSource(_getDataSource()),
+                    monthViewSettings: MonthViewSettings(
+                      numberOfWeeksInView: weekView,
+                      appointmentDisplayMode:
+                          MonthAppointmentDisplayMode.indicator,
+                      dayFormat: "EEE",
                     ),
-                  ],
+                  ),
                 ),
                 Container(
-                  height: 500,
-                  alignment: Alignment.center,
+                  height: 400,
                   child: SfCalendar(
-                    view: calendarView,
-                    timeSlotViewSettings:
-                        const TimeSlotViewSettings(timeIntervalHeight: 40),
-                    controller: calendarController,
-                    monthViewSettings: const MonthViewSettings(
-                        showAgenda: true,
-                        agendaViewHeight: 300,
-                        agendaItemHeight: 60),
                     dataSource: MeetingDataSource(_getDataSource()),
-                    appointmentTextStyle: const TextStyle(
-                      fontSize: 20,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                    ),
+                    showCurrentTimeIndicator: true,
+                    view: CalendarView.schedule,
                   ),
                 ),
               ],
