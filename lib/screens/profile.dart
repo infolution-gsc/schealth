@@ -12,7 +12,6 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-
   late String name;
   late String email;
   late String photoUrl;
@@ -24,22 +23,20 @@ class _ProfileState extends State<Profile> {
     super.initState();
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      print(user);
-        // Name, email address, and profile photo URL
-         name = user.displayName.toString();
-         email = user.email.toString();
-         photoUrl = user.photoURL.toString();
+      // Name, email address, and profile photo URL
+      name = user.displayName.toString();
+      email = user.email.toString();
+      photoUrl = user.photoURL.toString();
 
-        // Check if user's email is verified
-         emailVerified = user.emailVerified;
+      // Check if user's email is verified
+      emailVerified = user.emailVerified;
 
-        // The user's ID, unique to the Firebase project. Do NOT use this value to
-        // authenticate with your backend server, if you have one. Use
-        // User.getIdToken() instead.
-         uid = user.uid;
+      // The user's ID, unique to the Firebase project. Do NOT use this value to
+      // authenticate with your backend server, if you have one. Use
+      // User.getIdToken() instead.
+      uid = user.uid;
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -131,13 +128,10 @@ class _ProfileState extends State<Profile> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-               Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: const [
-                  LogoutButton()
-                ]
-               )
+              Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: const [LogoutButton()])
             ],
           )
         ],
@@ -145,5 +139,3 @@ class _ProfileState extends State<Profile> {
     );
   }
 }
-
-
