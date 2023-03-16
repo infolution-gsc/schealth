@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:healthy_planner/controller/task.dart';
 import 'package:healthy_planner/utils/theme.dart';
 import 'package:date_field/date_field.dart';
 
@@ -15,6 +17,10 @@ class AddTask extends StatefulWidget {
 class _AddTaskState extends State<AddTask> with RestorationMixin {
   @override
   String? get restorationId => widget.restorationId;
+
+  late DateTime _inputDate;
+  late String _inputForm;
+  final TaskController controller = TaskController();
 
   final RestorableDateTime _selectedDate =
       RestorableDateTime(DateTime(2023, 2, 27));
@@ -58,6 +64,12 @@ class _AddTaskState extends State<AddTask> with RestorationMixin {
     if (newSelectedDate != null) {
       setState(() {
         _selectedDate.value = newSelectedDate;
+        setState(() {
+          _inputDate = _selectedDate.value;
+          _inputForm =
+              '${_selectedDate.value.day}/${_selectedDate.value.month}/${_selectedDate.value.year}';
+          controller.dateC.text = _inputForm;
+        });
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text(
               'Selected: ${_selectedDate.value.day}/${_selectedDate.value.month}/${_selectedDate.value.year}'),
@@ -66,10 +78,48 @@ class _AddTaskState extends State<AddTask> with RestorationMixin {
     }
   }
 
+  void todayDate() {
+    setState(() {
+      _selectedDate.value = DateTime.now();
+      _inputDate = _selectedDate.value;
+      _inputForm =
+          '${_selectedDate.value.day}/${_selectedDate.value.month}/${_selectedDate.value.year}';
+      controller.dateC.text = _inputForm;
+    });
+  }
+
+  void tomorrowDate() {
+    setState(() {
+      _selectedDate.value = DateTime.now().add(const Duration(days: 1));
+      _inputDate = _selectedDate.value;
+      _inputForm =
+          '${_selectedDate.value.day}/${_selectedDate.value.month}/${_selectedDate.value.year}';
+      controller.dateC.text = _inputForm;
+    });
+  }
+
+  void nextWeekDate() {
+    setState(() {
+      _selectedDate.value = DateTime.now().add(const Duration(days: 7));
+      _inputDate = _selectedDate.value;
+      _inputForm =
+          '${_selectedDate.value.day}/${_selectedDate.value.month}/${_selectedDate.value.year}';
+      controller.dateC.text = _inputForm;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        systemOverlayStyle: SystemUiOverlayStyle(
+          // Status bar color
+          statusBarColor: blueBackground,
+
+          // Status bar brightness (optional)
+          statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
+          statusBarBrightness: Brightness.light, // For iOS (dark icons)
+        ),
         backgroundColor: blueBackground,
         elevation: 0,
         leading: IconButton(
@@ -91,7 +141,7 @@ class _AddTaskState extends State<AddTask> with RestorationMixin {
           ),
         ),
       ),
-      body: Container(
+      body: SizedBox(
         width: MediaQuery.of(context).size.width,
         child: SingleChildScrollView(
           child: Column(children: [
@@ -110,35 +160,45 @@ class _AddTaskState extends State<AddTask> with RestorationMixin {
                     Text(
                       'Name',
                       style: GoogleFonts.poppins(
-                        fontSize: 16,
+                        fontSize: 14,
                         fontWeight: FontWeight.w500,
                         color: Colors.white,
                       ),
                     ),
                     TextFormField(
+                        controller: controller.nameC,
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600),
                         decoration: const InputDecoration(
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                      ),
-                    )),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white),
+                          ),
+                        )),
                     const SizedBox(
                       height: 10,
                     ),
                     Text(
                       'Date',
                       style: GoogleFonts.poppins(
-                        fontSize: 16,
+                        fontSize: 14,
                         fontWeight: FontWeight.w500,
                         color: Colors.white,
                       ),
                     ),
                     Container(
                       padding: EdgeInsets.only(
-                          right: MediaQuery.of(context).size.width / 2),
-                      child: DateTimeFormField(
+                          right: MediaQuery.of(context).size.width / 2.5),
+                      child: TextFormField(
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600),
+                        controller: controller.dateC,
                         decoration: InputDecoration(
                           hintStyle: const TextStyle(color: Colors.white),
                           enabledBorder: const UnderlineInputBorder(
@@ -148,7 +208,7 @@ class _AddTaskState extends State<AddTask> with RestorationMixin {
                             borderSide: BorderSide(color: Colors.white),
                           ),
                           suffixIcon: IconButton(
-                            onPressed: () {
+                            onPressed: () async {
                               _restorableDatePickerRouteFuture.present();
                             },
                             icon: const Icon(Icons.calendar_month),
@@ -160,63 +220,72 @@ class _AddTaskState extends State<AddTask> with RestorationMixin {
                     const SizedBox(
                       height: 10,
                     ),
-                    Row(
-                      children: [
-                        Container(
-                          width: 100,
-                          child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10)),
-                                backgroundColor: button1,
-                              ),
-                              onPressed: () {},
-                              child: Text(
-                                'Today',
-                                style: GoogleFonts.poppins(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    color: blueBackground),
-                              )),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.only(left: 10),
-                          width: 120,
-                          child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10)),
-                                backgroundColor: button1,
-                              ),
-                              onPressed: () {},
-                              child: Text(
-                                'Tomorrow',
-                                style: GoogleFonts.poppins(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    color: blueBackground),
-                              )),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.only(left: 10),
-                          width: 120,
-                          child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10)),
-                                backgroundColor: button1,
-                              ),
-                              onPressed: () {},
-                              child: Text(
-                                'Next Week',
-                                style: GoogleFonts.poppins(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w500,
-                                    color: blueBackground),
-                              )),
-                        ),
-                      ],
-                    ),
+                    SingleChildScrollView(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            width: 78,
+                            child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                  backgroundColor: button1,
+                                ),
+                                onPressed: () {
+                                  todayDate();
+                                },
+                                child: Text(
+                                  'Today',
+                                  style: GoogleFonts.poppins(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: blueBackground),
+                                )),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.only(left: 9),
+                            width: 115,
+                            child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                  backgroundColor: button1,
+                                ),
+                                onPressed: () {
+                                  tomorrowDate();
+                                },
+                                child: Text(
+                                  'Tomorrow',
+                                  style: GoogleFonts.poppins(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: blueBackground),
+                                )),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.only(left: 9),
+                            width: 117,
+                            child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                  backgroundColor: button1,
+                                ),
+                                onPressed: () {
+                                  nextWeekDate();
+                                },
+                                child: Text(
+                                  'Next Week',
+                                  style: GoogleFonts.poppins(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                      color: blueBackground),
+                                )),
+                          ),
+                        ],
+                      ),
+                    )
                   ]),
             ),
             Container(
@@ -293,23 +362,24 @@ class _AddTaskState extends State<AddTask> with RestorationMixin {
                     const SizedBox(
                       height: 100,
                     ),
-                    Center(
-                      child: Container(
-                        height: 50,
-                        width: 300,
-                        decoration: BoxDecoration(
-                            color: blueBackground,
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(30))),
-                        child: Center(
-                            child: Text(
-                          "Add Task",
-                          style: GoogleFonts.poppins(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.white,
-                          ),
-                        )),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF306BCE),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        minimumSize: const Size.fromHeight(60), // NEW
+                      ),
+                      onPressed: () async {
+                        controller.addTask(
+                            controller.nameC.text, _inputDate, false, context);
+                      },
+                      child: Text(
+                        'Add Task',
+                        style: GoogleFonts.poppins(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                   ]),
