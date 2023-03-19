@@ -5,7 +5,6 @@
 
 import 'dart:math';
 
-import 'package:circular_menu/circular_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -18,8 +17,6 @@ import 'package:healthy_planner/screens/profile.dart';
 import 'package:healthy_planner/screens/timer.dart';
 import 'package:healthy_planner/screens/task.dart';
 import 'package:healthy_planner/utils/theme.dart';
-import 'package:healthy_planner/widget/circular_menu/action_button.dart';
-import 'package:healthy_planner/widget/circular_menu/expandable_fab.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class Navigation extends StatefulWidget {
@@ -42,8 +39,8 @@ class _NavigationState extends State<Navigation>
   final PageStorageBucket bucket = PageStorageBucket();
   Widget currentScreen = const Dashboard();
 
-  late String name;
-  late String photoUrl;
+  String? name;
+  String? photoUrl;
   late AnimationController _controller;
   late Animation _animation;
 
@@ -106,7 +103,7 @@ class _NavigationState extends State<Navigation>
               MaterialButton(
                 minWidth: 40,
                 child: CircleAvatar(
-                  foregroundImage: NetworkImage(photoUrl),
+                  foregroundImage: NetworkImage(photoUrl ?? ''),
                 ),
                 onPressed: () {
                   Navigator.push(
@@ -119,7 +116,7 @@ class _NavigationState extends State<Navigation>
                 height: 5,
               ),
               Text(
-                name.isEmpty ? 'Hi, Fellas' : 'Hi, $name',
+                nameSearch(name ?? ''),
                 style: GoogleFonts.poppins(
                   fontSize: 24,
                   fontWeight: FontWeight.w500,
@@ -145,10 +142,6 @@ class _NavigationState extends State<Navigation>
             ),
           ),
         ),
-        // body: PageStorage(
-        //   bucket: bucket,
-        //   child: currentScreen,
-        // ),
         body: PageStorage(
           child: Stack(
             children: [
@@ -162,45 +155,6 @@ class _NavigationState extends State<Navigation>
           ),
           bucket: bucket,
         ),
-
-        // floatingActionButton: ExpandableFab(children: [
-        //   ActionButton(
-        //     icon: const Icon(
-        //       Icons.person,
-        //       color: Colors.white,
-        //     ),
-        //     onPressed: () {
-        //       Navigator.push(
-        //         context,
-        //         MaterialPageRoute(builder: (context) => const AddTask()),
-        //       );
-        //     },
-        //   ),
-        //   ActionButton(
-        //     icon: const Icon(
-        //       Icons.settings,
-        //       color: Colors.white,
-        //     ),
-        //     onPressed: () {
-        //       Navigator.push(
-        //         context,
-        //         MaterialPageRoute(builder: (context) => const AddDaily()),
-        //       );
-        //     },
-        //   ),
-        //   ActionButton(
-        //     icon: const Icon(
-        //       Icons.add,
-        //       color: Colors.white,
-        //     ),
-        //     onPressed: () {
-        //       Navigator.push(
-        //         context,
-        //         MaterialPageRoute(builder: (context) => const AddHabit()),
-        //       );
-        //     },
-        //   ),
-        // ], distance: 120),
         bottomNavigationBar: Container(
           height: toogle ? 80 : 180,
           decoration: BoxDecoration(
@@ -643,5 +597,12 @@ class _NavigationState extends State<Navigation>
   void _navigateToAddTask(BuildContext context) {
     Navigator.of(context)
         .pushReplacement(MaterialPageRoute(builder: (context) => AddTask()));
+  }
+
+  String nameSearch(String name) {
+    this.name = name;
+    String nameReturn;
+    name.isEmpty ? nameReturn = 'Hi, Fellas' : nameReturn = 'Hi, $name';
+    return nameReturn;
   }
 }

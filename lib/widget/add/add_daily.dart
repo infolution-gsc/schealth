@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:healthy_planner/utils/theme.dart';
 import 'package:date_field/date_field.dart';
 import 'package:dropdown_textfield/dropdown_textfield.dart';
+import 'week_repeat.dart';
 
 class AddDaily extends StatefulWidget {
   const AddDaily({super.key, this.restorationId});
@@ -14,6 +15,31 @@ class AddDaily extends StatefulWidget {
 }
 
 class _AddDailyState extends State<AddDaily> with RestorationMixin {
+  final dataController = TextEditingController();
+
+  @override
+  void dispose() {
+    dataController.dispose();
+    super.dispose();
+  }
+
+  bool pressAttention1 = true;
+  bool pressAttention2 = true;
+  bool pressAttention3 = true;
+  bool isChecked = false;
+
+  Color getColor(Set<MaterialState> states) {
+    const Set<MaterialState> interactiveStates = <MaterialState>{
+      MaterialState.pressed,
+      MaterialState.hovered,
+      MaterialState.focused,
+    };
+    if (states.any(interactiveStates.contains)) {
+      return Colors.white;
+    }
+    return Colors.white;
+  }
+
   @override
   String? get restorationId => widget.restorationId;
 
@@ -118,14 +144,15 @@ class _AddDailyState extends State<AddDaily> with RestorationMixin {
                         ),
                       ),
                       TextFormField(
+                          controller: dataController,
                           decoration: const InputDecoration(
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
-                        ),
-                      )),
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white),
+                            ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: Colors.white),
+                            ),
+                          )),
                       const SizedBox(
                         height: 10,
                       ),
@@ -146,17 +173,26 @@ class _AddDailyState extends State<AddDaily> with RestorationMixin {
                             width: 100,
                             child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10)),
-                                  backgroundColor: button1,
-                                ),
-                                onPressed: () {},
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    backgroundColor:
+                                        pressAttention1 ? button1 : button2),
+                                onPressed: () {
+                                  setState(() {
+                                    pressAttention1 = false;
+                                    pressAttention2 = true;
+                                    pressAttention3 = true;
+                                  });
+                                },
                                 child: Text(
                                   'Study',
                                   style: GoogleFonts.poppins(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
-                                      color: blueBackground),
+                                      color: pressAttention1
+                                          ? blueColor
+                                          : button1),
                                 )),
                           ),
                           Container(
@@ -164,17 +200,26 @@ class _AddDailyState extends State<AddDaily> with RestorationMixin {
                             width: 100,
                             child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10)),
-                                  backgroundColor: button1,
-                                ),
-                                onPressed: () {},
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    backgroundColor:
+                                        pressAttention2 ? button1 : button2),
+                                onPressed: () {
+                                  setState(() {
+                                    pressAttention1 = true;
+                                    pressAttention2 = false;
+                                    pressAttention3 = true;
+                                  });
+                                },
                                 child: Text(
                                   'Work',
                                   style: GoogleFonts.poppins(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
-                                      color: blueBackground),
+                                      color: pressAttention2
+                                          ? blueColor
+                                          : button1),
                                 )),
                           ),
                           Container(
@@ -182,17 +227,26 @@ class _AddDailyState extends State<AddDaily> with RestorationMixin {
                             width: 100,
                             child: ElevatedButton(
                                 style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10)),
-                                  backgroundColor: button1,
-                                ),
-                                onPressed: () {},
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(10)),
+                                    backgroundColor:
+                                        pressAttention3 ? button1 : button2),
+                                onPressed: () {
+                                  setState(() {
+                                    pressAttention1 = true;
+                                    pressAttention2 = true;
+                                    pressAttention3 = false;
+                                  });
+                                },
                                 child: Text(
                                   'Others',
                                   style: GoogleFonts.poppins(
                                       fontSize: 16,
                                       fontWeight: FontWeight.w500,
-                                      color: blueBackground),
+                                      color: pressAttention3
+                                          ? blueColor
+                                          : button1),
                                 )),
                           ),
                         ],
@@ -230,25 +284,27 @@ class _AddDailyState extends State<AddDaily> with RestorationMixin {
                           ),
                         ),
                       ),
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        child: Row(children: [
-                          Checkbox(
-                            value: false,
-                            onChanged: (value) {},
-                            checkColor: Colors.white,
-                            activeColor: Colors.white,
+                      Row(children: [
+                        Checkbox(
+                          value: isChecked,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              isChecked = value!;
+                            });
+                          },
+                          checkColor: Colors.black,
+                          fillColor:
+                              MaterialStateProperty.resolveWith(getColor),
+                        ),
+                        Text(
+                          'Repeat',
+                          style: GoogleFonts.poppins(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                            color: Colors.white,
                           ),
-                          Text(
-                            'Repeat',
-                            style: GoogleFonts.poppins(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.white,
-                            ),
-                          )
-                        ]),
-                      ),
+                        )
+                      ]),
                       const SizedBox(
                         height: 5,
                       ),
@@ -290,6 +346,18 @@ class _AddDailyState extends State<AddDaily> with RestorationMixin {
                               return null;
                             }
                           },
+                          textFieldDecoration: InputDecoration(
+                            suffixIconColor: blueColor,
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: blueBackground),
+                            ),
+                            focusedBorder: UnderlineInputBorder(
+                              borderSide: BorderSide(color: blueBackground),
+                            ),
+                          ),
+                          dropdownRadius: 18,
+                          listTextStyle: GoogleFonts.poppins(
+                              fontSize: 16, color: blueColor),
                           dropdownColor: Colors.white,
                           searchDecoration: InputDecoration(
                               border: UnderlineInputBorder(
@@ -298,12 +366,12 @@ class _AddDailyState extends State<AddDaily> with RestorationMixin {
                           dropDownItemCount: 4,
                           dropDownList: const [
                             DropDownValueModel(
-                                name: '5 minutes before', value: "value1"),
+                                name: '5 Minutes Before', value: "value1"),
                             DropDownValueModel(
-                                name: '10 minutes before', value: "value1"),
+                                name: '10 Minutes Before', value: "value1"),
                             DropDownValueModel(
-                                name: '15 minutes before', value: "value1"),
-                            DropDownValueModel(name: 'custom', value: "value1"),
+                                name: '15 Minutes Before', value: "value1"),
+                            DropDownValueModel(name: 'Custom', value: "value1"),
                           ]),
                       const SizedBox(
                         height: 10,
@@ -350,21 +418,21 @@ class _AddDailyState extends State<AddDaily> with RestorationMixin {
                       ),
                       Center(
                         child: Container(
-                          height: 50,
-                          width: 300,
-                          decoration: BoxDecoration(
-                              color: blueBackground,
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(30))),
-                          child: Center(
-                              child: Text(
-                            "Add Schedule",
-                            style: GoogleFonts.poppins(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w500,
-                              color: Colors.white,
+                          width: 310,
+                          height: 54,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              primary: blueColor,
                             ),
-                          )),
+                            onPressed: () {},
+                            child: Text(
+                              'Add Schedule',
+                              style: GoogleFonts.poppins(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white),
+                            ),
+                          ),
                         ),
                       ),
                     ]),
