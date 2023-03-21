@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:healthy_planner/utils/theme.dart';
 
 class TaskController {
   TextEditingController hourC = TextEditingController();
@@ -40,12 +41,39 @@ class TaskController {
       showDialog(
           context: context,
           builder: (context) => AlertDialog(
-                title: const Text('Success'),
-                content: const Text("Berhasil menambahkan data"),
+                shadowColor: Color.fromARGB(0, 0, 0, 100),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16)),
+                title: const Text(
+                  'Success',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      color: Color(0xFF2756A5), fontWeight: FontWeight.w600),
+                ),
+                content: const Text(
+                  "Berhasil menambahkan data",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      color: Color(0xFF262626), fontWeight: FontWeight.w500),
+                ),
                 actions: [
                   TextButton(
                       onPressed: () => Navigator.pop(context),
-                      child: const Text('OK'))
+                      child: Container(
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                            color: const Color(0xFF306BCE)),
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(
+                              vertical: 8.0, horizontal: 26),
+                          child: Text(
+                            'OK',
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ))
                 ],
               ));
     } catch (e) {
@@ -78,6 +106,7 @@ class TaskController {
               'user_id',
               isEqualTo: userId,
             )
+            .orderBy('complete', descending: false)
             .orderBy('deadlineDate', descending: false)
             .orderBy('priority', descending: false)
             .snapshots();
@@ -88,6 +117,7 @@ class TaskController {
               isEqualTo: userId,
             )
             .where("category", isEqualTo: category)
+            .orderBy('complete', descending: false)
             .orderBy('deadlineDate', descending: false)
             .orderBy('priority', descending: false)
             // .orderBy('deadlineDate', descending: false)
@@ -101,6 +131,7 @@ class TaskController {
               'user_id',
               isEqualTo: userId,
             )
+            .orderBy('complete', descending: false)
             .orderBy('priority', descending: false)
             .orderBy('deadlineDate', descending: false)
             // .orderBy('priority', descending: false)
@@ -113,8 +144,10 @@ class TaskController {
               isEqualTo: userId,
             )
             .where("category", isEqualTo: category)
+            .orderBy('complete', descending: false)
             .orderBy('priority', descending: false)
             .orderBy('deadlineDate', descending: false)
+
             // .orderBy('priority', descending: false)
             // .orderBy('deadlineDate', descending: false)
             .snapshots();

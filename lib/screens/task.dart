@@ -17,9 +17,9 @@ class Task extends StatefulWidget {
 
 class _TaskState extends State<Task> {
   final TaskController controller = TaskController();
-  late String userId;
-  late String selectedCategory = 'All';
-  late String lengthTask = "";
+  String? userId;
+  String selectedCategory = 'All';
+  String lengthTask = "";
   String valueDropdown = "Deadline";
 
   @override
@@ -171,7 +171,7 @@ class _TaskState extends State<Task> {
                                             " " +
                                             "Task",
                                         style: const TextStyle(
-                                          fontSize: 14,
+                                          fontSize: 12,
                                           fontWeight: FontWeight.w500,
                                           color: Colors.white,
                                         ),

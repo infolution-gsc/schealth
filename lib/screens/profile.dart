@@ -12,15 +12,14 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  late String name;
-  late String email;
-  late String photoUrl = "";
-  late bool emailVerified;
-  late String uid;
+  String? name;
+  String? email;
+  String? photoUrl;
+  String? uid;
+  bool? emailVerified;
 
   @override
   void initState() {
-    super.initState();
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       // Name, email address, and profile photo URL
@@ -36,6 +35,7 @@ class _ProfileState extends State<Profile> {
       // User.getIdToken() instead.
       uid = user.uid;
     }
+    super.initState();
   }
 
   @override
@@ -73,7 +73,7 @@ class _ProfileState extends State<Profile> {
                               ? const AssetImage(
                                       'assets/illustration/student.png')
                                   as ImageProvider
-                              : NetworkImage(photoUrl),
+                              : NetworkImage(photoUrl!),
                     ),
                     onPressed: () {},
                   ),
@@ -86,7 +86,7 @@ class _ProfileState extends State<Profile> {
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       Text(
-                        name.isEmpty ? 'No Name' : name,
+                        name == null ? 'No Name' : name!,
                         style: GoogleFonts.poppins(
                           fontSize: 30,
                           fontWeight: FontWeight.w500,
@@ -98,7 +98,7 @@ class _ProfileState extends State<Profile> {
                   Row(
                     children: [
                       Text(
-                        email.isEmpty ? 'No Email' : email,
+                        email == null ? 'No Email' : email!,
                         style: GoogleFonts.poppins(
                             fontSize: 15, fontWeight: FontWeight.w400),
                       )
