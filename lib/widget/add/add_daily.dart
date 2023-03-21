@@ -14,7 +14,7 @@ class AddDaily extends StatefulWidget {
 }
 
 class _AddDailyState extends State<AddDaily> with RestorationMixin {
-  TextEditingController timeCtl = TextEditingController();
+  TextEditingController timeControl = TextEditingController();
 
   bool pressAttention1 = true;
   bool pressAttention2 = true;
@@ -41,6 +41,12 @@ class _AddDailyState extends State<AddDaily> with RestorationMixin {
       return Colors.white;
     }
     return Colors.white;
+  }
+
+  @override
+  void initState() {
+    timeControl.text = "";
+    super.initState();
   }
 
   @override
@@ -285,8 +291,8 @@ class _AddDailyState extends State<AddDaily> with RestorationMixin {
                           setState(() {
                             isChecked = value!;
                             isChecked
-                                ? containerTopHeight = 500
-                                : containerTopHeight = 410;
+                                ? containerTopHeight = 510
+                                : containerTopHeight = 400;
                           });
                         },
                         checkColor: Colors.black,
@@ -302,7 +308,8 @@ class _AddDailyState extends State<AddDaily> with RestorationMixin {
                       )
                     ]),
                     isChecked
-                        ? Container(
+                        ? SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -585,9 +592,6 @@ class _AddDailyState extends State<AddDaily> with RestorationMixin {
                             ),
                           )
                         : Container(),
-                    const SizedBox(
-                      height: 5,
-                    ),
                     Text(
                       'Time',
                       style: GoogleFonts.poppins(
