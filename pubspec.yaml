@@ -43,6 +43,7 @@ dependencies:
   fab_circular_menu: ^1.0.0
   dropdown_button2: ^2.0.0
   flutter_datetime_picker: ^1.5.1
+  intl: ^0.18.0
 
 dev_dependencies:
   flutter_test:
