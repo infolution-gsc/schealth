@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:healthy_planner/controller/task.dart';
+import 'package:healthy_planner/controller/taskController.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:healthy_planner/utils/theme.dart';
 import 'package:healthy_planner/widget/dropdown/drop_down_list.dart';
@@ -28,7 +28,9 @@ class _TaskState extends State<Task> {
 
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      userId = user.uid;
+      setState(() {
+        userId = user.uid;
+      });
     }
   }
 

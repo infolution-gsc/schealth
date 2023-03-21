@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:healthy_planner/controller/task.dart';
+import 'package:healthy_planner/controller/taskController.dart';
 import 'package:healthy_planner/utils/theme.dart';
 import 'package:date_field/date_field.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -32,6 +32,10 @@ class _AddTaskState extends State<AddTask> with RestorationMixin {
   late String labelSelected = "Others";
   final TaskController controller = TaskController();
 
+  TextEditingController dateC = TextEditingController();
+  TextEditingController nameC = TextEditingController();
+  TextEditingController noteC = TextEditingController();
+
   TextEditingController _labelController = TextEditingController();
 
   final RestorableDateTime _selectedDate = RestorableDateTime(DateTime.now());
@@ -53,7 +57,9 @@ class _AddTaskState extends State<AddTask> with RestorationMixin {
     super.initState();
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      uid = user.uid;
+      setState(() {
+        uid = user.uid;
+      });
     }
   }
 
@@ -90,7 +96,7 @@ class _AddTaskState extends State<AddTask> with RestorationMixin {
           _inputDate = _selectedDate.value;
           _inputForm =
               '${_selectedDate.value.day}/${_selectedDate.value.month}/${_selectedDate.value.year}';
-          controller.dateC.text = _inputForm;
+          dateC.text = _inputForm;
         });
         // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         //   content: Text(
@@ -117,7 +123,7 @@ class _AddTaskState extends State<AddTask> with RestorationMixin {
         } else {
           _inputFormTime = '${time.hour}:${time.minute}';
         }
-        controller.dateC.text = '$_inputForm - $_inputFormTime';
+        dateC.text = '$_inputForm - $_inputFormTime';
       });
     }
   }
@@ -128,7 +134,7 @@ class _AddTaskState extends State<AddTask> with RestorationMixin {
       _inputDate = _selectedDate.value;
       _inputForm =
           '${_selectedDate.value.day}/${_selectedDate.value.month}/${_selectedDate.value.year}';
-      controller.dateC.text = _inputForm;
+      dateC.text = _inputForm;
     });
   }
 
@@ -138,7 +144,7 @@ class _AddTaskState extends State<AddTask> with RestorationMixin {
       _inputDate = _selectedDate.value;
       _inputForm =
           '${_selectedDate.value.day}/${_selectedDate.value.month}/${_selectedDate.value.year}';
-      controller.dateC.text = _inputForm;
+      dateC.text = _inputForm;
     });
   }
 
@@ -148,7 +154,15 @@ class _AddTaskState extends State<AddTask> with RestorationMixin {
       _inputDate = _selectedDate.value;
       _inputForm =
           '${_selectedDate.value.day}/${_selectedDate.value.month}/${_selectedDate.value.year}';
-      controller.dateC.text = _inputForm;
+      dateC.text = _inputForm;
+    });
+  }
+
+  void clearText() {
+    setState(() {
+      nameC.clear();
+      noteC.clear();
+      dateC.clear();
     });
   }
 
@@ -226,7 +240,7 @@ class _AddTaskState extends State<AddTask> with RestorationMixin {
                     Container(
                       height: 35,
                       child: TextFormField(
-                          controller: controller.nameC,
+                          controller: nameC,
                           style: const TextStyle(
                               color: Colors.white,
                               fontSize: 14,
@@ -260,7 +274,7 @@ class _AddTaskState extends State<AddTask> with RestorationMixin {
                             color: Colors.white,
                             fontSize: 14,
                             fontWeight: FontWeight.w600),
-                        controller: controller.dateC,
+                        controller: dateC,
                         decoration: InputDecoration(
                           hintStyle: const TextStyle(color: Colors.white),
                           enabledBorder: const UnderlineInputBorder(
@@ -372,7 +386,7 @@ class _AddTaskState extends State<AddTask> with RestorationMixin {
                     Container(
                       height: 40,
                       child: TextFormField(
-                          controller: controller.noteC,
+                          controller: noteC,
                           style: TextStyle(
                               color: blackInput,
                               fontSize: 14,
@@ -769,15 +783,16 @@ class _AddTaskState extends State<AddTask> with RestorationMixin {
                       onPressed: () async {
                         controller.addTask(
                             uid,
-                            controller.nameC.text,
+                            nameC.text,
                             _inputDate,
                             _inputTime,
-                            controller.noteC.text,
+                            noteC.text,
                             priority,
                             reminder,
                             false,
                             labelSelected,
                             context);
+                        clearText;
                       },
                       child: Text(
                         'Add Task',
