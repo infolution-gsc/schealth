@@ -5,9 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class TaskController {
-  TextEditingController dateC = TextEditingController();
-  TextEditingController nameC = TextEditingController();
-  TextEditingController noteC = TextEditingController();
   TextEditingController hourC = TextEditingController();
   TextEditingController minC = TextEditingController();
   TextEditingController secC = TextEditingController();

@@ -14,7 +14,7 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   late String name;
   late String email;
-  late String photoUrl;
+  late String photoUrl = "";
   late bool emailVerified;
   late String uid;
 
@@ -69,7 +69,11 @@ class _ProfileState extends State<Profile> {
                       radius: 30,
                       foregroundImage:
                           // photoUrl.isEmpty ? const AssetImage('assets/illustration/student.png') : NetworkImage(photoUrl),
-                          NetworkImage(photoUrl),
+                          photoUrl == " "
+                              ? const AssetImage(
+                                      'assets/illustration/student.png')
+                                  as ImageProvider
+                              : NetworkImage(photoUrl),
                     ),
                     onPressed: () {},
                   ),
