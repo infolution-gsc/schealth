@@ -14,8 +14,6 @@ class AddDaily extends StatefulWidget {
 }
 
 class _AddDailyState extends State<AddDaily> with RestorationMixin {
-  TextEditingController timeControl = TextEditingController();
-
   bool pressAttention1 = true;
   bool pressAttention2 = true;
   bool pressAttention3 = true;
@@ -41,12 +39,6 @@ class _AddDailyState extends State<AddDaily> with RestorationMixin {
       return Colors.white;
     }
     return Colors.white;
-  }
-
-  @override
-  void initState() {
-    timeControl.text = "";
-    super.initState();
   }
 
   @override
@@ -90,14 +82,18 @@ class _AddDailyState extends State<AddDaily> with RestorationMixin {
         _restorableDatePickerRouteFuture, 'date_picker_route_future');
   }
 
+  TextEditingController timeFormatController = TextEditingController();
+
   void _selectDate(DateTime? newSelectedDate) {
     if (newSelectedDate != null) {
       setState(() {
         _selectedDate.value = newSelectedDate;
-        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text(
-              'Selected: ${_selectedDate.value.day}/${_selectedDate.value.month}/${_selectedDate.value.year}'),
-        ));
+        setState(() {
+          setState(() {
+            timeFormatController.text =
+                '${_selectedDate.value.day}/${_selectedDate.value.month}/${_selectedDate.value.year}';
+          });
+        });
       });
     }
   }
@@ -291,7 +287,7 @@ class _AddDailyState extends State<AddDaily> with RestorationMixin {
                           setState(() {
                             isChecked = value!;
                             isChecked
-                                ? containerTopHeight = 510
+                                ? containerTopHeight = 490
                                 : containerTopHeight = 400;
                           });
                         },
@@ -308,23 +304,22 @@ class _AddDailyState extends State<AddDaily> with RestorationMixin {
                       )
                     ]),
                     isChecked
-                        ? SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Frequency',
-                                  style: GoogleFonts.poppins(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white,
-                                  ),
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Frequency',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.white,
                                 ),
-                                const SizedBox(
-                                  height: 5,
-                                ),
-                                Row(
+                              ),
+                              const SizedBox(
+                                height: 5,
+                              ),
+                              SingleChildScrollView(
+                                child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
@@ -588,8 +583,8 @@ class _AddDailyState extends State<AddDaily> with RestorationMixin {
                                     ),
                                   ],
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
                           )
                         : Container(),
                     Text(
@@ -601,14 +596,18 @@ class _AddDailyState extends State<AddDaily> with RestorationMixin {
                       ),
                     ),
                     TextFormField(
+                        controller: timeFormatController,
+                        style: GoogleFonts.poppins(color: Colors.white),
+                        maxLines: 1,
+                        onTap: () {},
                         decoration: const InputDecoration(
-                      enabledBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                      ),
-                      focusedBorder: UnderlineInputBorder(
-                        borderSide: BorderSide(color: Colors.white),
-                      ),
-                    )),
+                          enabledBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white),
+                          ),
+                          focusedBorder: UnderlineInputBorder(
+                            borderSide: BorderSide(color: Colors.white),
+                          ),
+                        )),
                   ]),
             ),
             Container(
