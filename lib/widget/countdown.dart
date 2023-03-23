@@ -2,9 +2,14 @@
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:healthy_planner/controller/noti.dart';
 import 'round_button.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
 class CountdownPage extends StatefulWidget {
   const CountdownPage({Key? key}) : super(key: key);
@@ -30,7 +35,11 @@ class _CountdownPageState extends State<CountdownPage>
 
   void notify() {
     if (countText == '0:00:00') {
-      FlutterRingtonePlayer.playNotification();
+      Notif.showNotificatios(
+        title: 'Time is up',
+        body: 'Time is up',
+        fln: flutterLocalNotificationsPlugin,
+      );
     }
   }
 
@@ -72,7 +81,20 @@ class _CountdownPageState extends State<CountdownPage>
           Stack(
             alignment: Alignment.center,
             children: [
-              SizedBox(
+              Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Color(0xFFFAFAFA),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Color(0xFF9CC0FB),
+                      blurRadius: 12,
+                      spreadRadius: 0,
+                      offset: Offset(0, 0),
+                    ),
+                  ],
+                  backgroundBlendMode: BlendMode.srcATop,
+                ),
                 width: 250,
                 height: 250,
                 child: CircularPercentIndicator(
@@ -143,38 +165,62 @@ class _CountdownPageState extends State<CountdownPage>
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                GestureDetector(
-                  onTap: () {
-                    if (controller.isAnimating) {
-                      controller.stop();
-                      setState(() {
-                        isPlaying = false;
-                      });
-                    } else {
-                      controller.reverse(
-                          from: controller.value == 0 ? 1.0 : controller.value);
-                      setState(() {
-                        isPlaying = true;
-                      });
-                    }
-                  },
-                  child: RoundButton(
-                    color: Color(0xFF306BCE),
-                    text: isPlaying == true ? "Pause" : "Play",
-                    colorText: Color(0xFFFFFFFF),
+                Container(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (controller.isAnimating) {
+                        controller.stop();
+                        setState(() {
+                          isPlaying = false;
+                        });
+                      } else {
+                        controller.reverse(
+                            from:
+                                controller.value == 0 ? 1.0 : controller.value);
+                        setState(() {
+                          isPlaying = true;
+                        });
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      shadowColor: Color(0xFF9CC0FB),
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      backgroundColor: Color(0xFF306BCE),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                    child: Text(
+                      isPlaying == true ? "Pause" : "Play",
+                      style: TextStyle(
+                          color: Color(0xffffffff),
+                          fontWeight: FontWeight.w600),
+                    ),
                   ),
                 ),
-                GestureDetector(
-                  onTap: () {
+                SizedBox(
+                  width: 20,
+                ),
+                ElevatedButton(
+                  onPressed: () {
                     controller.reset();
                     setState(() {
                       isPlaying = false;
                     });
                   },
-                  child: RoundButton(
-                    color: Color(0xFF9CC0FB),
-                    text: "Reset",
-                    colorText: Color(0xFF306BCE),
+                  style: ElevatedButton.styleFrom(
+                    shadowColor: Color(0xFF9CC0FB),
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    backgroundColor: Color(0xFF9CC0FB),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                  ),
+                  child: Text(
+                    "Stop",
+                    style: TextStyle(
+                        color: Color(0xff306BCE), fontWeight: FontWeight.w600),
                   ),
                 ),
               ],

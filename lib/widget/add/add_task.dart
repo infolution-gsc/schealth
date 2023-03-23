@@ -158,14 +158,6 @@ class _AddTaskState extends State<AddTask> with RestorationMixin {
     });
   }
 
-  void clearText() {
-    setState(() {
-      nameC.clear();
-      noteC.clear();
-      dateC.clear();
-    });
-  }
-
   List<String> listPriority = <String>[
     'No Priority',
     'Low Priority',
@@ -792,7 +784,9 @@ class _AddTaskState extends State<AddTask> with RestorationMixin {
                             false,
                             labelSelected,
                             context);
-                        clearText;
+                        nameC.clear();
+                        noteC.clear();
+                        dateC.clear();
                       },
                       child: Text(
                         'Add Task',

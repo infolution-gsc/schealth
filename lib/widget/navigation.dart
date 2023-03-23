@@ -4,10 +4,13 @@
 // ignore_for_file: depend_on_referenced_packages, sort_child_properties_last, prefer_const_constructors
 
 import 'dart:math';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:healthy_planner/controller/noti.dart';
 import 'package:healthy_planner/widget/add/add_daily.dart';
 import 'package:healthy_planner/widget/add/add_habit.dart';
 import 'package:healthy_planner/widget/add/add_task.dart';
@@ -18,6 +21,9 @@ import 'package:healthy_planner/screens/timer.dart';
 import 'package:healthy_planner/screens/task.dart';
 import 'package:healthy_planner/utils/theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
 class Navigation extends StatefulWidget {
   const Navigation({Key? key}) : super(key: key);
@@ -47,6 +53,7 @@ class _NavigationState extends State<Navigation>
   @override
   void initState() {
     super.initState();
+    Notif.initialize(flutterLocalNotificationsPlugin);
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       name = user.displayName.toString();
@@ -82,10 +89,12 @@ class _NavigationState extends State<Navigation>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        extendBodyBehindAppBar: true,
+        extendBody: true,
         appBar: AppBar(
           systemOverlayStyle: const SystemUiOverlayStyle(
             // Status bar color
-            statusBarColor: Color(0xFFFAFAFA),
+            statusBarColor: Colors.transparent,
 
             // Status bar brightness (optional)
             statusBarIconBrightness:
@@ -103,7 +112,10 @@ class _NavigationState extends State<Navigation>
               MaterialButton(
                 minWidth: 40,
                 child: CircleAvatar(
-                  foregroundImage: NetworkImage(photoUrl ?? ''),
+                  backgroundImage: photoUrl == null
+                      ? NetworkImage(photoUrl!)
+                      : AssetImage('assets/illustration/student.png')
+                          as ImageProvider,
                 ),
                 onPressed: () {
                   Navigator.push(
@@ -145,11 +157,33 @@ class _NavigationState extends State<Navigation>
         body: PageStorage(
           child: Stack(
             children: [
-              currentScreen,
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: const AssetImage('assets/bg/bg.png'),
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              SafeArea(child: currentScreen),
               toogle
                   ? Container()
-                  : Container(
-                      color: Colors.black.withOpacity(0.5),
+                  : BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomCenter,
+                            colors: const [
+                              Colors.white60,
+                              Colors.white10,
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
             ],
           ),
@@ -157,9 +191,6 @@ class _NavigationState extends State<Navigation>
         ),
         bottomNavigationBar: Container(
           height: toogle ? 80 : 180,
-          decoration: BoxDecoration(
-              color:
-                  toogle ? Colors.transparent : Colors.black.withOpacity(0.5)),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -173,7 +204,6 @@ class _NavigationState extends State<Navigation>
                       ),
                       Container(
                         decoration: const BoxDecoration(
-                          color: Colors.transparent,
                           borderRadius: BorderRadius.only(
                               topRight: Radius.circular(30),
                               topLeft: Radius.circular(30)),
@@ -190,97 +220,151 @@ class _NavigationState extends State<Navigation>
                             topLeft: Radius.circular(40.0),
                             topRight: Radius.circular(40.0),
                           ),
-                          child: BottomAppBar(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: <Widget>[
-                                MaterialButton(
-                                  minWidth: 40,
-                                  onPressed: () {
-                                    setState(() {
-                                      currentScreen = const Dashboard();
-                                      currentTab = 0;
-                                    });
-                                  },
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Image(
-                                        image: const AssetImage(
-                                            'assets/icon/Dashboard.png'),
+                          child: BottomNavigationBar(
+                              elevation: 0,
+                              currentIndex: 0,
+                              onTap: (index) {
+                                setState(() {
+                                  currentScreen = screens[index];
+                                  currentTab = index;
+                                });
+                              },
+                              type: BottomNavigationBarType.fixed,
+                              backgroundColor: Color(0xFFF5F5F5),
+                              showSelectedLabels: false,
+                              selectedItemColor: Color(0xFF306BCE),
+                              unselectedItemColor: Color(0xFFE0E0E0),
+                              showUnselectedLabels: false,
+                              items: <BottomNavigationBarItem>[
+                                BottomNavigationBarItem(
+                                    icon: Image.asset(
+                                        'assets/icon/Dashboard.png',
                                         color: currentTab == 0
                                             ? blueColor
-                                            : Colors.grey,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                MaterialButton(
-                                  minWidth: 40,
-                                  onPressed: () {
-                                    setState(() {
-                                      currentScreen = const Task();
-                                      currentTab = 1;
-                                    });
-                                  },
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Image(
-                                        image: const AssetImage(
-                                            'assets/icon/Task.png'),
+                                            : Color(0xFfE0E0E0)),
+                                    label: 'Dashboard'),
+                                BottomNavigationBarItem(
+                                    icon: Transform.translate(
+                                      offset: Offset(-20, 0),
+                                      child: Image.asset(
+                                        'assets/icon/Task.png',
                                         color: currentTab == 1
                                             ? blueColor
-                                            : Colors.grey,
+                                            : Color(0xFfE0E0E0),
                                       ),
-                                    ],
-                                  ),
-                                ),
-                                MaterialButton(
-                                  minWidth: 40,
-                                  onPressed: () {
-                                    setState(() {
-                                      currentScreen = const Health();
-                                      currentTab = 2;
-                                    });
-                                  },
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Image(
-                                        image: const AssetImage(
-                                            'assets/icon/Health.png'),
+                                    ),
+                                    label: 'Task'),
+                                BottomNavigationBarItem(
+                                    icon: Transform.translate(
+                                      offset: Offset(20, 0),
+                                      child: Image.asset(
+                                        'assets/icon/Health.png',
                                         color: currentTab == 2
                                             ? blueColor
-                                            : Colors.grey,
+                                            : Color(0xFfE0E0E0),
                                       ),
-                                    ],
-                                  ),
-                                ),
-                                MaterialButton(
-                                  minWidth: 40,
-                                  onPressed: () {
-                                    setState(() {
-                                      currentScreen = const Timer();
-                                      currentTab = 3;
-                                    });
-                                  },
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Image(
-                                        image: const AssetImage(
-                                            'assets/icon/Timer.png'),
-                                        color: currentTab == 3
-                                            ? blueColor
-                                            : Colors.grey,
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                                    ),
+                                    label: 'Health'),
+                                BottomNavigationBarItem(
+                                    icon: Image.asset(
+                                      'assets/icon/Timer.png',
+                                      color: currentTab == 3
+                                          ? blueColor
+                                          : Color(0xFfE0E0E0),
+                                    ),
+                                    label: 'Timer'),
+                              ]),
+                          // child: BottomAppBar(
+                          //   child: Row(
+                          //     mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          //     children: <Widget>[
+                          //       MaterialButton(
+                          //         minWidth: 40,
+                          //         onPressed: () {
+                          //           setState(() {
+                          //             currentScreen = const Dashboard();
+                          //             currentTab = 0;
+                          //           });
+                          //         },
+                          //         child: Column(
+                          //           mainAxisAlignment: MainAxisAlignment.center,
+                          //           children: [
+                          //             Image(
+                          //               image: const AssetImage(
+                          //                   'assets/icon/Dashboard.png'),
+                          //               color: currentTab == 0
+                          //                   ? blueColor
+                          //                   : Colors.grey,
+                          //             ),
+                          //           ],
+                          //         ),
+                          //       ),
+                          //       MaterialButton(
+                          //         minWidth: 40,
+                          //         onPressed: () {
+                          //           setState(() {
+                          //             currentScreen = const Task();
+                          //             currentTab = 1;
+                          //           });
+                          //         },
+                          //         child: Column(
+                          //           mainAxisAlignment: MainAxisAlignment.center,
+                          //           children: [
+                          //             Image(
+                          //               image: const AssetImage(
+                          //                   'assets/icon/Task.png'),
+                          //               color: currentTab == 1
+                          //                   ? blueColor
+                          //                   : Colors.grey,
+                          //             ),
+                          //           ],
+                          //         ),
+                          //       ),
+                          //       MaterialButton(
+                          //         minWidth: 40,
+                          //         onPressed: () {
+                          //           setState(() {
+                          //             currentScreen = const Health();
+                          //             currentTab = 2;
+                          //           });
+                          //         },
+                          //         child: Column(
+                          //           mainAxisAlignment: MainAxisAlignment.center,
+                          //           children: [
+                          //             Image(
+                          //               image: const AssetImage(
+                          //                   'assets/icon/Health.png'),
+                          //               color: currentTab == 2
+                          //                   ? blueColor
+                          //                   : Colors.grey,
+                          //             ),
+                          //           ],
+                          //         ),
+                          //       ),
+                          //       MaterialButton(
+                          //         minWidth: 40,
+                          //         onPressed: () {
+                          //           setState(() {
+                          //             currentScreen = const Timer();
+                          //             currentTab = 3;
+                          //           });
+                          //         },
+                          //         child: Column(
+                          //           mainAxisAlignment: MainAxisAlignment.center,
+                          //           children: [
+                          //             Image(
+                          //               image: const AssetImage(
+                          //                   'assets/icon/Timer.png'),
+                          //               color: currentTab == 3
+                          //                   ? blueColor
+                          //                   : Colors.grey,
+                          //             ),
+                          //           ],
+                          //         ),
+                          //       ),
+                          //     ],
+                          //   ),
+                          // ),
                         ),
                       ),
                     ],
@@ -312,8 +396,8 @@ class _NavigationState extends State<Navigation>
                                   boxShadow: [
                                     BoxShadow(
                                       color: Colors.grey.withOpacity(0.5),
-                                      spreadRadius: 12,
-                                      blurRadius: 10,
+                                      spreadRadius: 0,
+                                      blurRadius: 5,
                                       offset: const Offset(0, 3),
                                     ),
                                   ],
@@ -348,7 +432,9 @@ class _NavigationState extends State<Navigation>
                                               ),
                                             ),
                                           )
-                                        : const SizedBox(),
+                                        : Transform.translate(
+                                            offset: Offset(0, -30),
+                                            child: const SizedBox()),
                                   ],
                                 )),
                           ),
@@ -376,8 +462,8 @@ class _NavigationState extends State<Navigation>
                                   boxShadow: [
                                     BoxShadow(
                                       color: Colors.grey.withOpacity(0.5),
-                                      spreadRadius: 12,
-                                      blurRadius: 10,
+                                      spreadRadius: 0,
+                                      blurRadius: 5,
                                       offset: const Offset(0, 3),
                                     ),
                                   ],
@@ -412,7 +498,9 @@ class _NavigationState extends State<Navigation>
                                               ),
                                             ),
                                           )
-                                        : const SizedBox(),
+                                        : Transform.translate(
+                                            offset: Offset(0, -30),
+                                            child: const SizedBox()),
                                   ],
                                 )),
                           ),
@@ -440,8 +528,8 @@ class _NavigationState extends State<Navigation>
                                   boxShadow: [
                                     BoxShadow(
                                       color: Colors.grey.withOpacity(0.5),
-                                      spreadRadius: 12,
-                                      blurRadius: 10,
+                                      spreadRadius: 0,
+                                      blurRadius: 5,
                                       offset: const Offset(0, 3),
                                     ),
                                   ],
@@ -476,7 +564,9 @@ class _NavigationState extends State<Navigation>
                                               ),
                                             ),
                                           )
-                                        : const SizedBox(),
+                                        : Transform.translate(
+                                            offset: Offset(0, -30),
+                                            child: const SizedBox()),
                                   ],
                                 )),
                           ),
@@ -500,7 +590,7 @@ class _NavigationState extends State<Navigation>
                                   boxShadow: [
                                     BoxShadow(
                                       color: Colors.grey.withOpacity(0.5),
-                                      spreadRadius: 12,
+                                      spreadRadius: 5,
                                       blurRadius: 10,
                                       offset: const Offset(0, 3),
                                     ),
