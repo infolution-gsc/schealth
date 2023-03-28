@@ -1,9 +1,12 @@
 //Dashboard
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:healthy_planner/database/daily.dart';
 import 'package:healthy_planner/utils/theme.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:hive/hive.dart';
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -13,105 +16,190 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
+  DateTime dateTime = DateTime.now();
+  final List<String> dayTime = <String>[
+    '1 AM',
+    '2 AM',
+    '3 AM',
+    '4 AM',
+    '5 AM',
+    '6 AM',
+    '7 AM',
+    '8 AM',
+    '9 AM',
+    '10 AM',
+    '11 AM',
+    '12 AM',
+    '1 PM',
+    '2 PM',
+    '3 PM',
+    '4 PM',
+    '5 PM',
+    '6 PM',
+    '7 PM',
+    '8 PM',
+    '9 PM',
+    '10 PM',
+    '11 PM',
+    '12 PM',
+  ];
+
   bool status = true;
 
   int weekView = 1;
   double heightCalendar = 144;
+  bool colorCalendar = true;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: Container(
-          width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height,
-          child: SingleChildScrollView(
-            child: Column(
+    return Container(
+        width: MediaQuery.of(context).size.width,
+        child: SingleChildScrollView(
+          child: Column(children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.only(right: 20, top: 10),
-                      child: FlutterSwitch(
-                        value: status,
-                        width: 60.0,
-                        height: 30.0,
-                        toggleSize: 25,
-                        borderRadius: 26.0,
-                        padding: 0.0,
-                        toggleColor: const Color(0xFF306BCE),
-                        activeColor: const Color(0xFFD8E6FD),
-                        inactiveColor: const Color(0xFFD8E6FD),
-                        valueFontSize: 10.0,
-                        activeText: 'week',
-                        inactiveText: 'day',
-                        activeTextColor: const Color(0xFF306BCE),
-                        inactiveTextColor: const Color(0xFF306BCE),
-                        activeTextFontWeight: FontWeight.w600,
-                        inactiveTextFontWeight: FontWeight.w600,
-                        showOnOff: true,
-                        activeIcon: TextButton(
-                          onPressed: () {},
-                          child: const Text(
-                            "day",
-                            style: TextStyle(
-                                color: Color(0xFFD8E6FD),
-                                fontSize: 100,
-                                fontWeight: FontWeight.w600),
-                          ),
-                        ),
-                        inactiveIcon: TextButton(
-                          onPressed: () {},
-                          child: const Text(
-                            "week",
-                            style: TextStyle(
-                                color: Color(0xFFD8E6FD),
-                                fontSize: 100,
-                                fontWeight: FontWeight.w600),
-                          ),
-                        ),
-                        onToggle: (val) {
-                          setState(() {
-                            status = val;
-                            if (val == true) {
-                              weekView = 1;
-                              heightCalendar = 144;
-                            } else {
-                              weekView = 4;
-                              heightCalendar = 300;
-                            }
-                          });
-                        },
+                Container(
+                  padding: const EdgeInsets.only(right: 30, top: 10),
+                  child: FlutterSwitch(
+                    value: status,
+                    width: 60.0,
+                    height: 30.0,
+                    toggleSize: 25,
+                    borderRadius: 26.0,
+                    padding: 0.0,
+                    toggleColor: const Color(0xFF306BCE),
+                    activeColor: const Color(0xFFD8E6FD),
+                    inactiveColor: const Color(0xFFD8E6FD),
+                    valueFontSize: 10.0,
+                    activeText: 'week',
+                    inactiveText: 'day',
+                    activeTextColor: const Color(0xFF306BCE),
+                    inactiveTextColor: const Color(0xFF306BCE),
+                    activeTextFontWeight: FontWeight.w600,
+                    inactiveTextFontWeight: FontWeight.w600,
+                    showOnOff: true,
+                    activeIcon: TextButton(
+                      onPressed: () {},
+                      child: const Text(
+                        "day",
+                        style: TextStyle(
+                            color: Color(0xFFD8E6FD),
+                            fontSize: 100,
+                            fontWeight: FontWeight.w600),
                       ),
                     ),
-                  ],
-                ),
-                Container(
-                  height: heightCalendar,
-                  child: SfCalendar(
-                    view: CalendarView.month,
-                    showNavigationArrow: true,
-                    dataSource: MeetingDataSource(_getDataSource()),
-                    monthViewSettings: MonthViewSettings(
-                      numberOfWeeksInView: weekView,
-                      appointmentDisplayMode:
-                          MonthAppointmentDisplayMode.indicator,
-                      dayFormat: "EEE",
+                    inactiveIcon: TextButton(
+                      onPressed: () {},
+                      child: const Text(
+                        "week",
+                        style: TextStyle(
+                            color: Color(0xFFD8E6FD),
+                            fontSize: 100,
+                            fontWeight: FontWeight.w600),
+                      ),
                     ),
-                  ),
-                ),
-                Container(
-                  height: 400,
-                  child: SfCalendar(
-                    dataSource: MeetingDataSource(_getDataSource()),
-                    showCurrentTimeIndicator: true,
-                    view: CalendarView.schedule,
+                    onToggle: (val) {
+                      setState(() {
+                        status = val;
+                        if (val == true) {
+                          weekView = 1;
+                          heightCalendar = 144;
+                        } else {
+                          weekView = 4;
+                          heightCalendar = 300;
+                        }
+                      });
+                    },
                   ),
                 ),
               ],
             ),
-          ),
+            SizedBox(
+              height: 10,
+            ),
+            Container(
+              height: heightCalendar,
+              child: SfCalendar(
+                view: CalendarView.month,
+                showNavigationArrow: true,
+                cellBorderColor: Colors.transparent,
+                dataSource: MeetingDataSource(_getDataSource()),
+                monthViewSettings: MonthViewSettings(
+                  numberOfWeeksInView: weekView,
+                  appointmentDisplayMode: MonthAppointmentDisplayMode.indicator,
+                  dayFormat: "E",
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  padding: EdgeInsets.only(left: 30),
+                  child: Text(
+                    'Today',
+                    style: GoogleFonts.poppins(
+                        fontSize: 24, fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            SingleChildScrollView(
+              padding: EdgeInsets.only(left: 20),
+              physics: ScrollPhysics(),
+              child: Column(
+                children: [
+                  ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: dayTime.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                          leading: Text(
+                        dayTime[index],
+                        style: GoogleFonts.poppins(
+                            color: Colors.grey,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500),
+                      ));
+                    },
+                  ),
+                ],
+              ),
+            )
+            /*
+            FutureBuilder(
+                future: Hive.openBox("dailys"),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    if (snapshot.hasError)
+                      return Center(
+                        child: Text('snapshot.error'),
+                      );
+                  } else {
+                    var daily = Hive.box('dailys');
+                    if (daily.length == 0) {
+                      daily.add(Daily('s', 0, dateTime, 0, 0, '421421', '321'));
+                    }
+                    return ListView.builder(
+                      itemCount: daily.length,
+                      itemBuilder: (context, index) {
+                        Daily dailys = daily.getAt(index);
+                        return Text(dailys.reminder.toString());
+                      },
+                    );
+                  }
+                  return Text('da');
+                })
+                */
+          ]),
         ));
   }
 
