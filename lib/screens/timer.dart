@@ -122,7 +122,7 @@ class _TimerState extends State<Timer> {
           ),
           const CountdownPage(),
           Padding(
-            padding: const EdgeInsets.only(left: 50),
+            padding: const EdgeInsets.only(left: 50, bottom: 50),
             child: Column(children: [
               ListView.separated(
                 separatorBuilder: (context, index) {

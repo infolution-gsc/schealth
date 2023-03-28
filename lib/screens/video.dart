@@ -43,6 +43,7 @@ class _VideoState extends State<Video> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         extendBodyBehindAppBar: true,
         extendBody: true,
         appBar: AppBar(
@@ -71,58 +72,62 @@ class _VideoState extends State<Video> {
             ),
           ),
           SafeArea(
-            child: Column(
-              children: [
-                YoutubePlayer(
-                  controller: _controller,
-                  showVideoProgressIndicator: true,
-                  bottomActions: [
-                    CurrentPosition(),
-                    ProgressBar(
-                      isExpanded: true,
-                      colors: ProgressBarColors(
-                        playedColor: blueBackground,
-                        handleColor: Colors.blueAccent,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        widget.title,
-                        style: const TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF132B52)),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        widget.source,
-                        style: const TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                            color: Color(0xFF9E9E9E)),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      Text(
-                        widget.desc,
-                        style: const TextStyle(fontSize: 14),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  YoutubePlayer(
+                    controller: _controller,
+                    showVideoProgressIndicator: true,
+                    bottomActions: [
+                      CurrentPosition(),
+                      ProgressBar(
+                        isExpanded: true,
+                        colors: ProgressBarColors(
+                          playedColor: blueBackground,
+                          handleColor: Colors.blueAccent,
+                        ),
                       ),
                     ],
                   ),
-                )
-              ],
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.title,
+                          style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF132B52)),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Text(
+                          widget.source,
+                          style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              color: Color(0xFF9E9E9E)),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Container(
+                          child: Text(
+                            widget.desc,
+                            style: const TextStyle(fontSize: 14),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ]));

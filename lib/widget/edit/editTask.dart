@@ -85,6 +85,8 @@ class _EditTaskState extends State<EditTask> with RestorationMixin {
 
     nameC.text = widget.getTitle;
     noteC.text = widget.getNote;
+    _inputDate = widget.getDate;
+    _inputTime = widget.getFormTime;
 
     initialDate =
         '${widget.getDate.day}/${widget.getDate.month}/${widget.getDate.year} : ${widget.getFormTime}';
@@ -925,6 +927,9 @@ class _EditTaskState extends State<EditTask> with RestorationMixin {
                         minimumSize: const Size.fromHeight(60), // NEW
                       ),
                       onPressed: () async {
+                        if (_inputDate == null) {
+                          _inputDate = widget.getDate;
+                        }
                         controller.updateTask(
                             uid,
                             nameC.text,

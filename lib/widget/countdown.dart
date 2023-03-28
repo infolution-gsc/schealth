@@ -21,7 +21,7 @@ class CountdownPage extends StatefulWidget {
 class _CountdownPageState extends State<CountdownPage>
     with TickerProviderStateMixin {
   late AnimationController controller;
-  bool longBreak = false;
+  late bool longBreak;
   Color colorIndicator = Color(0xFF306BCE);
 
   bool isPlaying = false;
@@ -42,9 +42,11 @@ class _CountdownPageState extends State<CountdownPage>
         body: 'Time is up',
         fln: flutterLocalNotificationsPlugin,
       );
-      setState(() {
-        longBreak = !longBreak;
-      });
+      if (longBreak == true) {
+        longBreak = false;
+      } else {
+        longBreak = true;
+      }
       if (longBreak == true) {
         controller.duration = Duration(minutes: 25);
       } else {
@@ -52,7 +54,6 @@ class _CountdownPageState extends State<CountdownPage>
       }
     }
   }
-  
 
   @override
   void initState() {
@@ -62,9 +63,11 @@ class _CountdownPageState extends State<CountdownPage>
       duration: Duration(seconds: 60),
     );
 
+    longBreak = false;
+
     controller.addListener(() {
-      notify();
       if (controller.isAnimating) {
+        notify();
         setState(() {
           progress = controller.value;
         });

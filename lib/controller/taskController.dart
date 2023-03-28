@@ -114,7 +114,6 @@ class TaskController {
       String docId,
       BuildContext context) async {
     CollectionReference tasks = firestore.collection('tasks');
-    print("update");
 
     if (priority == "High Priority") {
       priority = "1";
