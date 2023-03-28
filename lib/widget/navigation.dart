@@ -85,6 +85,14 @@ class _NavigationState extends State<Navigation>
   double size1 = 50;
   double size2 = 50;
   double size3 = 50;
+  bool refresh = true;
+
+  Future<void> refreshPage() {
+    setState(() {
+      refresh = !refresh;
+    });
+    return Future.value();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -127,13 +135,17 @@ class _NavigationState extends State<Navigation>
               const SizedBox(
                 height: 5,
               ),
-              Text(
-                nameSearch(name ?? ''),
-                style: GoogleFonts.poppins(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
+              currentTab == 0
+                  ? Text(
+                      nameSearch(name ?? ''),
+                      style: GoogleFonts.poppins(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    )
+                  : const SizedBox(
+                      height: 5,
+                    ),
             ]),
           ),
           centerTitle: true,
@@ -154,40 +166,43 @@ class _NavigationState extends State<Navigation>
             ),
           ),
         ),
-        body: PageStorage(
-          child: Stack(
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: const AssetImage('assets/bg/bg.png'),
-                    fit: BoxFit.cover,
+        body: RefreshIndicator(
+          onRefresh: refreshPage,
+          child: PageStorage(
+            child: Stack(
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: const AssetImage('assets/bg/bg.png'),
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
-              ),
-              SafeArea(child: currentScreen),
-              toogle
-                  ? Container()
-                  : BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomCenter,
-                            colors: const [
-                              Colors.white60,
-                              Colors.white10,
-                            ],
+                SafeArea(child: currentScreen),
+                toogle
+                    ? Container()
+                    : BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomCenter,
+                              colors: const [
+                                Colors.white60,
+                                Colors.white10,
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-            ],
+              ],
+            ),
+            bucket: bucket,
           ),
-          bucket: bucket,
         ),
         bottomNavigationBar: Container(
           height: toogle ? 80 : 180,
