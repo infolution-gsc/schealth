@@ -12,11 +12,11 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  String? name;
-  String? email;
-  String? photoUrl;
-  String? uid;
-  bool? emailVerified;
+  late String name;
+  late String email;
+  late String photoUrl;
+  late String uid;
+  late bool emailVerified;
 
   @override
   void initState() {
@@ -73,7 +73,7 @@ class _ProfileState extends State<Profile> {
                               ? const AssetImage(
                                       'assets/illustration/student.png')
                                   as ImageProvider
-                              : NetworkImage(photoUrl!),
+                              : NetworkImage(photoUrl),
                     ),
                     onPressed: () {},
                   ),
@@ -86,7 +86,7 @@ class _ProfileState extends State<Profile> {
                     mainAxisSize: MainAxisSize.max,
                     children: [
                       Text(
-                        name == null ? 'No Name' : name!,
+                        name == null ? 'No Name' : name,
                         style: GoogleFonts.poppins(
                           fontSize: 30,
                           fontWeight: FontWeight.w500,
@@ -98,7 +98,7 @@ class _ProfileState extends State<Profile> {
                   Row(
                     children: [
                       Text(
-                        email == null ? 'No Email' : email!,
+                        email == null ? 'No Email' : email,
                         style: GoogleFonts.poppins(
                             fontSize: 15, fontWeight: FontWeight.w400),
                       )

@@ -48,6 +48,12 @@ dependencies:
   flutter_local_notifications: ^13.0.0
   youtube_player_flutter: ^8.1.2
   webview_flutter: ^4.0.7
+  chips_choice: ^3.0.0
+  path_provider:
+  hive:
+  hive_flutter:
+  hive_generator:
+  build_runner:
 
 dev_dependencies:
   flutter_test:

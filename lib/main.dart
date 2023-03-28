@@ -4,12 +4,22 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:healthy_planner/database/daily.dart';
 import 'package:healthy_planner/widget/navigation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:hive/hive.dart';
+import 'package:hive_flutter/adapters.dart';
+import 'package:path_provider/path_provider.dart' as pathProvider;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const HealthyDailyPlanner());
+  var appDocumentDirectory =
+      await pathProvider.getApplicationDocumentsDirectory();
+  Hive.init(appDocumentDirectory.path);
+  await Hive.initFlutter();
+  Hive.registerAdapter(DailyAdapter());
+
+  runApp(HealthyDailyPlanner());
 }
 
 class HealthyDailyPlanner extends StatelessWidget {

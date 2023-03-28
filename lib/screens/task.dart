@@ -17,7 +17,7 @@ class Task extends StatefulWidget {
 
 class _TaskState extends State<Task> {
   final TaskController controller = TaskController();
-  String? userId;
+  String userId = '';
   String selectedCategory = 'All';
   String lengthTask = "";
   String valueDropdown = "Deadline";
