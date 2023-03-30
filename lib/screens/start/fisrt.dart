@@ -84,7 +84,7 @@ class _FirstStartState extends State<FirstStart> {
               ],
             ),
             Container(
-                alignment: const Alignment(0, 0.75),
+                alignment: const Alignment(0, 0.78),
                 padding: const EdgeInsets.symmetric(horizontal: 50),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

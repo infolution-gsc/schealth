@@ -37,27 +37,28 @@ class LetsStart extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Container(
-                        child: Image(
-                            width: MediaQuery.of(context).size.width,
+                        child: Center(
+                          child: Image(
+                            width: MediaQuery.of(context).size.width * 0.8,
                             image: const AssetImage(
-                                'assets/illustration/letsstart.png')),
+                                'assets/illustration/letsstart.png'),
+                          ),
+                        ),
                       ),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.8,
-                            child: Text(
-                              "Schealth",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 36,
-                                  color: blueBackground),
+                            width: MediaQuery.of(context).size.width * 0.4,
+                            child: Image.asset(
+                              'assets/logo/Schealth.png',
+                              fit: BoxFit.contain,
                             ),
                           ),
+                          const SizedBox(height: 8),
                           Container(
-                              width: MediaQuery.of(context).size.width * 0.7,
+                              width: MediaQuery.of(context).size.width * 0.8,
                               child: const Text(
                                 "Be organized, stay focused, and stay healthy",
                                 textAlign: TextAlign.start,

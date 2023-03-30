@@ -31,6 +31,9 @@ class _SignInState extends State<SignIn> {
   checkIfLogin() async {
     auth.authStateChanges().listen((User? user) {
       if (user != null && mounted) {
+        setState(() {
+          isLoading = false;
+        });
         Navigator.pushReplacement(context,
             MaterialPageRoute(builder: (context) => const Navigation()));
       }

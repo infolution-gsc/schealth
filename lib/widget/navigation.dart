@@ -11,6 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:healthy_planner/controller/noti.dart';
+import 'package:healthy_planner/screens/auth/home.dart';
 import 'package:healthy_planner/widget/add/add_daily.dart';
 import 'package:healthy_planner/widget/add/add_habit.dart';
 import 'package:healthy_planner/widget/add/add_task.dart';
@@ -35,15 +36,10 @@ class Navigation extends StatefulWidget {
 class _NavigationState extends State<Navigation>
     with SingleTickerProviderStateMixin {
   int currentTab = 0;
-  final List<Widget> screens = [
-    const Dashboard(),
-    const Task(),
-    const Health(),
-    const Timer(),
-  ];
+  late List<Widget> screens = [];
 
   final PageStorageBucket bucket = PageStorageBucket();
-  Widget currentScreen = const Dashboard();
+  late Widget currentScreen;
 
   String? name;
   String? photoUrl;
@@ -60,8 +56,8 @@ class _NavigationState extends State<Navigation>
           photoUrl = user.photoURL.toString();
         }
       } else {
-        name = 'Fellas';
-        photoUrl = null;
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => const HomePage()));
       }
     });
   }
@@ -76,6 +72,15 @@ class _NavigationState extends State<Navigation>
 
     checkIfLogin();
 
+    screens = [
+      const Dashboard(),
+      const Task(),
+      const Health(),
+      const Timer(),
+    ];
+
+    currentScreen = const Dashboard();
+
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 350),
@@ -86,10 +91,6 @@ class _NavigationState extends State<Navigation>
         parent: _controller,
         curve: Curves.easeOut,
         reverseCurve: Curves.easeIn);
-
-    _controller.addListener(() {
-      setState(() {});
-    });
   }
 
   bool toogle = true;
@@ -136,10 +137,8 @@ class _NavigationState extends State<Navigation>
               MaterialButton(
                 minWidth: 40,
                 child: CircleAvatar(
-                  backgroundImage: photoUrl == null
-                      ? NetworkImage(photoUrl!)
-                      : AssetImage('assets/illustration/student.png')
-                          as ImageProvider,
+                  backgroundImage:
+                      AssetImage('assets/illustration/student.png'),
                 ),
                 onPressed: () {
                   Navigator.push(
