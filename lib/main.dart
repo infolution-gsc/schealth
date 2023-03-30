@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:healthy_planner/database/daily.dart';
+import 'package:healthy_planner/screens/auth/home.dart';
 import 'package:healthy_planner/widget/navigation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:hive/hive.dart';
@@ -39,7 +40,7 @@ class HealthyDailyPlanner extends StatelessWidget {
           future: _initializeFirebase(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
-              return const Navigation();
+              return const HomePage();
             }
             return const Center(
               child: CircularProgressIndicator(),

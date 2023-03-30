@@ -49,6 +49,8 @@ dependencies:
   youtube_player_flutter: ^8.1.2
   webview_flutter: ^4.0.7
   chips_choice: ^3.0.0
+  timezone: ^0.9.1
+  smooth_page_indicator: ^1.0.1
   path_provider:
   hive:
   hive_flutter:
@@ -130,7 +132,7 @@ flutter_native_splash:
   # splash screen to a png image.  This is useful for gradients. The image will be stretch to the
   # size of the app. Only one parameter can be used, color and background_image cannot both be set.
   # color: "#FAFAFA"
-  background_image: "assets/logo/background.png"
+  background_image: "assets/bg/bg.png"
 
   # Optional parameters are listed below.  To enable a parameter, uncomment the line by removing
   # the leading # character.

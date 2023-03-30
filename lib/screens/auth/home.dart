@@ -5,7 +5,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:healthy_planner/screens/auth/signin.dart';
-import 'package:healthy_planner/screens/start/first.dart';
+import 'package:healthy_planner/screens/start/fisrt.dart';
+import 'package:healthy_planner/screens/start/letsstart.dart';
 import 'package:healthy_planner/widget/navigation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -39,6 +40,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: isLogin ? const Navigation() : const SignIn());
+    return Scaffold(body: const LetsStart());
   }
 }

@@ -49,16 +49,32 @@ class _NavigationState extends State<Navigation>
   String? photoUrl;
   late AnimationController _controller;
   late Animation _animation;
+  var auth = FirebaseAuth.instance;
+
+  checkIfLogin() async {
+    auth.authStateChanges().listen((User? user) {
+      if (user != null && mounted) {
+        final user = FirebaseAuth.instance.currentUser;
+        if (user != null) {
+          name = user.displayName.toString();
+          photoUrl = user.photoURL.toString();
+        }
+      } else {
+        name = 'Fellas';
+        photoUrl = null;
+      }
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     Notif.initialize(flutterLocalNotificationsPlugin);
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      name = user.displayName.toString();
-      photoUrl = user.photoURL.toString();
-    }
+
+    name = 'Fellas';
+    photoUrl = null;
+
+    checkIfLogin();
 
     _controller = AnimationController(
       vsync: this,
@@ -137,7 +153,7 @@ class _NavigationState extends State<Navigation>
               ),
               currentTab == 0
                   ? Text(
-                      nameSearch(name ?? ''),
+                      name == "null" ? 'Hi, Fellas' : 'Hi, $name',
                       style: GoogleFonts.poppins(
                         fontSize: 24,
                         fontWeight: FontWeight.w500,

@@ -117,6 +117,7 @@ class _CountdownPageState extends State<CountdownPage>
                 height: 250,
                 child: CircularPercentIndicator(
                   circularStrokeCap: CircularStrokeCap.round,
+                  reverse: true,
                   radius: 125.0,
                   backgroundColor: Colors.transparent,
                   percent: progress,

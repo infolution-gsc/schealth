@@ -24,7 +24,7 @@ class _TimerState extends State<Timer> {
       child: Column(
         children: [
           Container(
-            padding: const EdgeInsets.only(top: 25),
+            padding: const EdgeInsets.only(top: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -42,6 +42,14 @@ class _TimerState extends State<Timer> {
                         IconButton(
                             onPressed: null, icon: Icon(Icons.arrow_drop_down)),
                       ],
+                    ),
+                    const Text(
+                      'Linear Algebra',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Color(0xFF757575),
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     const Text(
                       '09:30 - 11.00',

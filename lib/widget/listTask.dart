@@ -1,11 +1,18 @@
 // ignore_for_file: sized_box_for_whitespace
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:healthy_planner/controller/noti.dart';
 import 'package:healthy_planner/controller/taskController.dart';
 import 'package:healthy_planner/widget/edit/editTask.dart';
 import 'package:healthy_planner/widget/transitions/slide_transitions.dart';
+
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
 class ListTask extends StatefulWidget {
   final String filterDropdown;
@@ -102,6 +109,19 @@ class _ListTaskState extends State<ListTask> {
         deadline = 'Missed';
         colordl = Color(0xFFB42318);
       });
+    } else if (diff.difference(now).inHours == 0) {
+      int dl = diff.difference(now).inMinutes;
+      if (dl > 0) {
+        setState(() {
+          deadline = '$dl minutes left';
+          colordl = Color(0xFF027A48);
+        });
+      } else {
+        setState(() {
+          deadline = 'Missed';
+          colordl = Color(0xFFB42318);
+        });
+      }
     }
   }
 
@@ -114,6 +134,7 @@ class _ListTaskState extends State<ListTask> {
   late String sendCategory;
   late String timeFormat;
   late String prio;
+  late DateTime remind;
 
   @override
   void initState() {
@@ -207,6 +228,28 @@ class _ListTaskState extends State<ListTask> {
     // formatTime();
     customPriority(widget.priority);
     deadlineMaker(int.parse(temp[0]), int.parse(temp[1]));
+
+    remind = DateTime(
+      widget.deadlineDate.year,
+      widget.deadlineDate.month,
+      widget.deadlineDate.day,
+      int.parse(hour),
+      int.parse(minute),
+    );
+
+    Timer.periodic(Duration(minutes: 1), (Timer t) {
+      if (remind.year == DateTime.now().year) {
+        if (remind.month == DateTime.now().month) {
+          if (remind.day == DateTime.now().day) {
+            Notif.showNotificatios(
+                title: "Task Reminder",
+                body: "$sendTitle 's deadline is today!",
+                fln: flutterLocalNotificationsPlugin);
+            t.cancel();
+          }
+        }
+      }
+    });
   }
 
   void customPriority(String value) {
@@ -214,7 +257,7 @@ class _ListTaskState extends State<ListTask> {
       setState(() {
         prio = "High Priority";
         colorpri = const Color(0xFFB42318);
-        containerPri = const Color(0xFFB42318);
+        containerPri = const Color(0xFFFECDCA);
         sendPriority = prio;
       });
     } else if (value == "2") {
