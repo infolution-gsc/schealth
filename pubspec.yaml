@@ -46,9 +46,19 @@ dependencies:
   flutter_datetime_picker: ^1.5.1
   intl: ^0.17.0
   flutter_local_notifications: ^13.0.0
+  youtube_player_flutter: ^8.1.2
+  webview_flutter: ^4.0.7
   chips_choice: ^3.0.0
   sqflite: 
   path: 
+  timezone: ^0.9.1
+  smooth_page_indicator: ^1.0.1
+  path_provider:
+  hive:
+  hive_flutter:
+  hive_generator:
+  build_runner:
+  fl_chart: ^0.61.0
 
 dev_dependencies:
   flutter_test:
@@ -125,7 +135,7 @@ flutter_native_splash:
   # splash screen to a png image.  This is useful for gradients. The image will be stretch to the
   # size of the app. Only one parameter can be used, color and background_image cannot both be set.
   # color: "#FAFAFA"
-  background_image: "assets/logo/background.png"
+  background_image: "assets/bg/bg.png"
 
   # Optional parameters are listed below.  To enable a parameter, uncomment the line by removing
   # the leading # character.

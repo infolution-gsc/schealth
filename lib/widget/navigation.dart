@@ -11,6 +11,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:healthy_planner/controller/noti.dart';
+import 'package:healthy_planner/screens/auth/home.dart';
 import 'package:healthy_planner/widget/add/add_daily.dart';
 import 'package:healthy_planner/widget/add/add_habit.dart';
 import 'package:healthy_planner/widget/add/add_task.dart';
@@ -35,30 +36,50 @@ class Navigation extends StatefulWidget {
 class _NavigationState extends State<Navigation>
     with SingleTickerProviderStateMixin {
   int currentTab = 0;
-  final List<Widget> screens = [
-    const Dashboard(),
-    const Task(),
-    const Health(),
-    const Timer(),
-  ];
+  late List<Widget> screens = [];
 
   final PageStorageBucket bucket = PageStorageBucket();
-  Widget currentScreen = const Dashboard();
+  late Widget currentScreen;
 
   String? name;
   String? photoUrl;
   late AnimationController _controller;
   late Animation _animation;
+  var auth = FirebaseAuth.instance;
+
+  checkIfLogin() async {
+    auth.authStateChanges().listen((User? user) {
+      if (user != null && mounted) {
+        final user = FirebaseAuth.instance.currentUser;
+        if (user != null) {
+          name = user.displayName.toString();
+          photoUrl = user.photoURL.toString();
+        }
+      } else {
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => const HomePage()));
+      }
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     Notif.initialize(flutterLocalNotificationsPlugin);
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      name = user.displayName.toString();
-      photoUrl = user.photoURL.toString();
-    }
+
+    name = 'Fellas';
+    photoUrl = null;
+
+    checkIfLogin();
+
+    screens = [
+      const Dashboard(),
+      const Task(),
+      const Health(),
+      const Timer(),
+    ];
+
+    currentScreen = const Dashboard();
 
     _controller = AnimationController(
       vsync: this,
@@ -70,10 +91,6 @@ class _NavigationState extends State<Navigation>
         parent: _controller,
         curve: Curves.easeOut,
         reverseCurve: Curves.easeIn);
-
-    _controller.addListener(() {
-      setState(() {});
-    });
   }
 
   bool toogle = true;
@@ -85,6 +102,14 @@ class _NavigationState extends State<Navigation>
   double size1 = 50;
   double size2 = 50;
   double size3 = 50;
+  bool refresh = true;
+
+  Future<void> refreshPage() {
+    setState(() {
+      refresh = !refresh;
+    });
+    return Future.value();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -112,10 +137,8 @@ class _NavigationState extends State<Navigation>
               MaterialButton(
                 minWidth: 40,
                 child: CircleAvatar(
-                  backgroundImage: photoUrl == null
-                      ? NetworkImage(photoUrl!)
-                      : AssetImage('assets/illustration/student.png')
-                          as ImageProvider,
+                  backgroundImage:
+                      AssetImage('assets/illustration/student.png'),
                 ),
                 onPressed: () {
                   Navigator.push(
@@ -127,13 +150,17 @@ class _NavigationState extends State<Navigation>
               const SizedBox(
                 height: 5,
               ),
-              Text(
-                nameSearch(name ?? ''),
-                style: GoogleFonts.poppins(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
+              currentTab == 0
+                  ? Text(
+                      name == "null" ? 'Hi, Fellas' : 'Hi, $name',
+                      style: GoogleFonts.poppins(
+                        fontSize: 24,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    )
+                  : const SizedBox(
+                      height: 5,
+                    ),
             ]),
           ),
           centerTitle: true,
@@ -154,40 +181,43 @@ class _NavigationState extends State<Navigation>
             ),
           ),
         ),
-        body: PageStorage(
-          child: Stack(
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: const AssetImage('assets/bg/bg.png'),
-                    fit: BoxFit.cover,
+        body: RefreshIndicator(
+          onRefresh: refreshPage,
+          child: PageStorage(
+            child: Stack(
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  height: MediaQuery.of(context).size.height,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: const AssetImage('assets/bg/bg.png'),
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
-              ),
-              SafeArea(child: currentScreen),
-              toogle
-                  ? Container()
-                  : BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomCenter,
-                            colors: const [
-                              Colors.white60,
-                              Colors.white10,
-                            ],
+                SafeArea(child: currentScreen),
+                toogle
+                    ? Container()
+                    : BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomCenter,
+                              colors: const [
+                                Colors.white60,
+                                Colors.white10,
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-            ],
+              ],
+            ),
+            bucket: bucket,
           ),
-          bucket: bucket,
         ),
         bottomNavigationBar: Container(
           height: toogle ? 80 : 180,

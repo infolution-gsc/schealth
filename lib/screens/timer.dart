@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
+import 'package:healthy_planner/utils/theme.dart';
 import 'package:healthy_planner/widget/countdown.dart';
 
 class Timer extends StatefulWidget {
@@ -9,8 +10,13 @@ class Timer extends StatefulWidget {
   State<Timer> createState() => _TimerState();
 }
 
+List<String> listNote = [
+  "Complete Task",
+];
+
 class _TimerState extends State<Timer> {
   bool status = true;
+  TextEditingController _noteController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +24,7 @@ class _TimerState extends State<Timer> {
       child: Column(
         children: [
           Container(
-            padding: const EdgeInsets.only(top: 25),
+            padding: const EdgeInsets.only(top: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -36,6 +42,14 @@ class _TimerState extends State<Timer> {
                         IconButton(
                             onPressed: null, icon: Icon(Icons.arrow_drop_down)),
                       ],
+                    ),
+                    const Text(
+                      'Linear Algebra',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Color(0xFF757575),
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                     const Text(
                       '09:30 - 11.00',
@@ -116,22 +130,138 @@ class _TimerState extends State<Timer> {
           ),
           const CountdownPage(),
           Padding(
-            padding: const EdgeInsets.only(left: 50),
+            padding: const EdgeInsets.only(left: 50, bottom: 50),
             child: Column(children: [
-              Row(
-                children: [
-                  Image.asset('assets/icon/dotNote.png'),
-                  const SizedBox(
-                    width: 10,
-                  ),
-                  const Text("Stay Hidrated",
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Color(0xFF262626),
-                        fontWeight: FontWeight.w700,
-                      )),
-                ],
+              ListView.separated(
+                separatorBuilder: (context, index) {
+                  return const SizedBox(
+                    height: 10,
+                  );
+                },
+                physics: AlwaysScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: listNote.length,
+                itemBuilder: (context, index) {
+                  var doc = listNote[index];
+                  return Row(
+                    children: [
+                      Image.asset('assets/icon/dotNote.png'),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Text(doc.toString(),
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Color(0xFF262626),
+                            fontWeight: FontWeight.w700,
+                          )),
+                    ],
+                  );
+                },
               ),
+              const SizedBox(
+                height: 10,
+              ),
+              GestureDetector(
+                onTap: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                            title: const Text("Add Notes",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Color(0xFF2756A5),
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600)),
+                            content: TextFormField(
+                                textAlign: TextAlign.center,
+                                controller: _noteController,
+                                style: TextStyle(
+                                    color: blackInput,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600),
+                                decoration: InputDecoration(
+                                  enabledBorder: UnderlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: blueBackground),
+                                  ),
+                                  focusedBorder: UnderlineInputBorder(
+                                    borderSide:
+                                        BorderSide(color: blueBackground),
+                                  ),
+                                )),
+                            actions: [
+                              TextButton(
+                                  style: ButtonStyle(
+                                    padding: MaterialStateProperty.all<
+                                            EdgeInsetsGeometry>(
+                                        EdgeInsets.symmetric(
+                                            horizontal: 20, vertical: 2)),
+                                    shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    )),
+                                    backgroundColor:
+                                        MaterialStateColor.resolveWith(
+                                            (states) => Color(0xFF9CC0FB)),
+                                    foregroundColor:
+                                        MaterialStateColor.resolveWith(
+                                            (states) => Color(0xFF2756A5)),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text(
+                                    'Cancel',
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w600),
+                                  )),
+                              TextButton(
+                                  style: ButtonStyle(
+                                    padding: MaterialStateProperty.all<
+                                            EdgeInsetsGeometry>(
+                                        EdgeInsets.symmetric(
+                                            horizontal: 20, vertical: 2)),
+                                    shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    )),
+                                    backgroundColor:
+                                        MaterialStateColor.resolveWith(
+                                            (states) => blueBackground),
+                                    foregroundColor:
+                                        MaterialStateColor.resolveWith(
+                                            (states) => Colors.white),
+                                  ),
+                                  onPressed: () {
+                                    setState(() {
+                                      listNote.add(_noteController.text);
+                                    });
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text('Add')),
+                            ],
+                            actionsAlignment: MainAxisAlignment.center,
+                          ));
+                },
+                child: Row(
+                  children: [
+                    Image.asset('assets/icon/addDot.png'),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Text("Add Notes",
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: blueBackground,
+                          fontWeight: FontWeight.w700,
+                        )),
+                  ],
+                ),
+              )
             ]),
           ),
         ],

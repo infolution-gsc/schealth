@@ -71,28 +71,31 @@ class _TaskState extends State<Task> {
                         itemCount: listDataLabel.length,
                         itemBuilder: (context, index) {
                           var doc = listDataLabel[index];
-                          return ChoiceChip(
-                            shape: const RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(50))),
-                            backgroundColor: blueBackground,
-                            selectedColor: const Color(0xFFD8E6FD),
-                            label: Text(
-                              doc,
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w500,
-                                color: selectedCategory == doc
-                                    ? blueBackground
-                                    : const Color(0xFFD8E6FD),
+                          return Container(
+                            margin: EdgeInsets.only(right: 5),
+                            child: ChoiceChip(
+                              shape: const RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(50))),
+                              backgroundColor: blueBackground,
+                              selectedColor: const Color(0xFFD8E6FD),
+                              label: Text(
+                                doc,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: selectedCategory == doc
+                                      ? blueBackground
+                                      : const Color(0xFFD8E6FD),
+                                ),
                               ),
+                              selected: selectedCategory == doc,
+                              onSelected: (value) {
+                                setState(() {
+                                  selectedCategory = doc;
+                                });
+                              },
                             ),
-                            selected: selectedCategory == doc,
-                            onSelected: (value) {
-                              setState(() {
-                                selectedCategory = doc;
-                              });
-                            },
                           );
                         },
                       );
@@ -283,7 +286,7 @@ class _TaskState extends State<Task> {
               const Text(
                 "Sort By",
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: 14,
                   fontWeight: FontWeight.w600,
                   color: Color(0xFF262626),
                 ),
@@ -291,23 +294,56 @@ class _TaskState extends State<Task> {
               const SizedBox(
                 width: 10,
               ),
-              DropdownButton(
-                  value: valueDropdown,
-                  items: const [
-                    DropdownMenuItem(
-                      child: Text("Deadline"),
-                      value: "Deadline",
-                    ),
-                    DropdownMenuItem(
-                      child: Text("Priority"),
-                      value: "Priority",
-                    ),
-                  ],
-                  onChanged: (value) {
-                    setState(() {
-                      valueDropdown = value.toString();
-                    });
-                  })
+              Container(
+                height: 30,
+                decoration: BoxDecoration(
+                    color: blueBackground,
+                    borderRadius: BorderRadius.circular(10)),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  child: DropdownButton(
+                      dropdownColor: Color(0xFFBDD5FC),
+                      underline: Container(),
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        color: Color(0xFFfafafa),
+                      ),
+                      icon: const Icon(
+                        Icons.arrow_drop_down,
+                        color: Colors.white,
+                      ),
+                      borderRadius: BorderRadius.circular(10),
+                      value: valueDropdown,
+                      items: [
+                        DropdownMenuItem(
+                          value: "Deadline",
+                          child: Text(
+                            "Deadline",
+                            style: TextStyle(
+                                color: valueDropdown == "Deadline"
+                                    ? Colors.white
+                                    : Color(0xFF132B52)),
+                          ),
+                        ),
+                        DropdownMenuItem(
+                          value: "Priority",
+                          child: Text(
+                            "Priority",
+                            style: TextStyle(
+                                color: valueDropdown == "Priority"
+                                    ? Colors.white
+                                    : Color(0xFF132B52)),
+                          ),
+                        ),
+                      ],
+                      onChanged: (value) {
+                        setState(() {
+                          valueDropdown = value.toString();
+                        });
+                      }),
+                ),
+              )
               // DropDownList<String>(
               //   listItems: const [
               //     ListItem<String>(

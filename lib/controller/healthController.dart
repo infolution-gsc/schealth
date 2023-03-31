@@ -12,13 +12,15 @@ class HealthController {
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   Stream<QuerySnapshot<Object?>> getData(String category) {
-    var query = "lifestyle";
-    if (category == "Lifestyle") {
-      query = "lifestyle";
-    } else if (category == "Sleep Hygiene") {
-      query = "sleep-hygiene";
-    } else if (category == "Mental Health") {
-      query = "mental";
+    var query = "eat-healthy";
+    if (category == "eat-healthy") {
+      query = "eat-healthy";
+    } else if (category == "Healthy From Mind") {
+      query = "healthy-from-mind";
+    } else if (category == "Everyday Simple Yoga") {
+      query = "everyday-simple-yoga";
+    } else if (category == "Better Sleep") {
+      query = "better-sleep";
     }
 
     CollectionReference health = firestore.collection(query);

@@ -21,6 +21,8 @@ class CountdownPage extends StatefulWidget {
 class _CountdownPageState extends State<CountdownPage>
     with TickerProviderStateMixin {
   late AnimationController controller;
+  late bool longBreak;
+  Color colorIndicator = Color(0xFF306BCE);
 
   bool isPlaying = false;
 
@@ -40,6 +42,16 @@ class _CountdownPageState extends State<CountdownPage>
         body: 'Time is up',
         fln: flutterLocalNotificationsPlugin,
       );
+      if (longBreak == true) {
+        longBreak = false;
+      } else {
+        longBreak = true;
+      }
+      if (longBreak == true) {
+        controller.duration = Duration(minutes: 25);
+      } else {
+        controller.duration = Duration(minutes: 5);
+      }
     }
   }
 
@@ -51,9 +63,11 @@ class _CountdownPageState extends State<CountdownPage>
       duration: Duration(seconds: 60),
     );
 
+    longBreak = false;
+
     controller.addListener(() {
-      notify();
       if (controller.isAnimating) {
+        notify();
         setState(() {
           progress = controller.value;
         });
@@ -84,7 +98,11 @@ class _CountdownPageState extends State<CountdownPage>
               Container(
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Color(0xFFFAFAFA),
+                  // color: Color(0xFFFAFAFA),
+                  image: DecorationImage(
+                    image: const AssetImage('assets/bg/bgC.png'),
+                    fit: BoxFit.cover,
+                  ),
                   boxShadow: const [
                     BoxShadow(
                       color: Color(0xFF9CC0FB),
@@ -93,17 +111,19 @@ class _CountdownPageState extends State<CountdownPage>
                       offset: Offset(0, 0),
                     ),
                   ],
-                  backgroundBlendMode: BlendMode.srcATop,
+                  // backgroundBlendMode: BlendMode.srcATop,
                 ),
                 width: 250,
                 height: 250,
                 child: CircularPercentIndicator(
                   circularStrokeCap: CircularStrokeCap.round,
+                  reverse: true,
                   radius: 125.0,
                   backgroundColor: Colors.transparent,
                   percent: progress,
                   lineWidth: 22,
-                  progressColor: Color(0xFF306BCE),
+                  progressColor:
+                      longBreak == true ? Color(0xFF132B52) : Color(0xFF306BCE),
                 ),
               ),
               GestureDetector(
@@ -129,9 +149,18 @@ class _CountdownPageState extends State<CountdownPage>
                     animation: controller,
                     builder: (context, child) => Column(
                           children: [
-                            SizedBox(
-                              height: 20,
-                            ),
+                            longBreak == true
+                                ? Text(
+                                    "Long Break",
+                                    style: TextStyle(
+                                      color: Color(0xFF132B52),
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  )
+                                : SizedBox(
+                                    height: 20,
+                                  ),
                             Text(
                               countText,
                               style: TextStyle(
@@ -142,7 +171,9 @@ class _CountdownPageState extends State<CountdownPage>
                                     color: Color(0xFF9CC0FB),
                                   ),
                                 ],
-                                color: Color(0xFF306BCE),
+                                color: longBreak == true
+                                    ? Color(0xFF132B52)
+                                    : Color(0xFF306BCE),
                                 fontSize: 28,
                                 fontWeight: FontWeight.bold,
                               ),
@@ -218,7 +249,7 @@ class _CountdownPageState extends State<CountdownPage>
                     ),
                   ),
                   child: Text(
-                    "Stop",
+                    "Reset",
                     style: TextStyle(
                         color: Color(0xff306BCE), fontWeight: FontWeight.w600),
                   ),

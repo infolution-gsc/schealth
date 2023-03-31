@@ -89,21 +89,6 @@ class _AddTaskState extends State<AddTask> with RestorationMixin {
   }
 
   void _selectDate(DateTime? newSelectedDate) async {
-    if (newSelectedDate != null) {
-      setState(() {
-        _selectedDate.value = newSelectedDate;
-        setState(() {
-          _inputDate = _selectedDate.value;
-          _inputForm =
-              '${_selectedDate.value.day}/${_selectedDate.value.month}/${_selectedDate.value.year}';
-          dateC.text = _inputForm;
-        });
-        // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        //   content: Text(
-        //       'Selected: ${_selectedDate.value.day}/${_selectedDate.value.month}/${_selectedDate.value.year}'),
-        // ));
-      });
-    }
     TimeOfDay? time = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.now(),
@@ -123,9 +108,30 @@ class _AddTaskState extends State<AddTask> with RestorationMixin {
         } else {
           _inputFormTime = '${time.hour}:${time.minute}';
         }
-        dateC.text = '$_inputForm - $_inputFormTime';
       });
     }
+
+    if (newSelectedDate != null) {
+      setState(() {
+        _selectedDate.value = newSelectedDate;
+        setState(() {
+          _inputDate = DateTime(
+              _selectedDate.value.year,
+              _selectedDate.value.month,
+              _selectedDate.value.day,
+              time!.hour,
+              time.minute);
+          _inputForm =
+              '${_selectedDate.value.day}/${_selectedDate.value.month}/${_selectedDate.value.year}';
+          dateC.text = _inputForm;
+        });
+        // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        //   content: Text(
+        //       'Selected: ${_selectedDate.value.day}/${_selectedDate.value.month}/${_selectedDate.value.year}'),
+        // ));
+      });
+    }
+    dateC.text = '$_inputForm - $_inputFormTime';
   }
 
   void todayDate() {
@@ -258,7 +264,7 @@ class _AddTaskState extends State<AddTask> with RestorationMixin {
                       ),
                     ),
                     Container(
-                      height: 35,
+                      height: 40,
                       padding: EdgeInsets.only(
                           right: MediaQuery.of(context).size.width / 2.5),
                       child: TextFormField(
