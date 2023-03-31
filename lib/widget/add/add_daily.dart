@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:healthy_planner/database/daily.dart';
+import 'package:healthy_planner/database/database_helper.dart';
 import 'package:healthy_planner/utils/theme.dart';
 import 'package:date_field/date_field.dart';
 import 'package:dropdown_textfield/dropdown_textfield.dart';
-import 'package:hive/hive.dart';
+
+final dbHelper = DatabaseHelper();
 
 class AddDaily extends StatefulWidget {
   const AddDaily({super.key, this.restorationId});
@@ -15,9 +16,7 @@ class AddDaily extends StatefulWidget {
   final String? restorationId;
 }
 
-class _AddDailyState extends State<AddDaily> with RestorationMixin {
-  var daily = Hive.box('Daily');
-
+class _AddDailyState extends State<AddDaily> {
   bool pressAttention1 = true;
   bool pressAttention2 = true;
   bool pressAttention3 = true;
@@ -28,10 +27,9 @@ class _AddDailyState extends State<AddDaily> with RestorationMixin {
   bool pressAttentionDay5 = true;
   bool pressAttentionDay6 = true;
   bool pressAttentionDay7 = true;
-  bool isChecked = false;
   double dayButtonWidth = 48;
   double dayButtonFontSize = 16;
-  double containerTopHeight = 400;
+  double containerTopHeight = 360;
   int reminderValue = 0;
   int timeFormat = 0;
   TextEditingController timeFormatController = TextEditingController();
@@ -55,58 +53,6 @@ class _AddDailyState extends State<AddDaily> with RestorationMixin {
 
   @override
   String? get restorationId => widget.restorationId;
-
-  final RestorableDateTime _selectedDate =
-      RestorableDateTime(DateTime(2023, 2, 27));
-  late final RestorableRouteFuture<DateTime?> _restorableDatePickerRouteFuture =
-      RestorableRouteFuture<DateTime?>(
-    onComplete: _selectDate,
-    onPresent: (NavigatorState navigator, Object? arguments) {
-      return navigator.restorablePush(
-        _datePickerRoute,
-        arguments: _selectedDate.value.millisecondsSinceEpoch,
-      );
-    },
-  );
-
-  static Route<DateTime> _datePickerRoute(
-    BuildContext context,
-    Object? arguments,
-  ) {
-    return DialogRoute<DateTime>(
-      context: context,
-      builder: (BuildContext context) {
-        return DatePickerDialog(
-          restorationId: 'date_picker_dialog',
-          initialEntryMode: DatePickerEntryMode.calendarOnly,
-          initialDate: DateTime.fromMillisecondsSinceEpoch(arguments! as int),
-          firstDate: DateTime(2022),
-          lastDate: DateTime(2050),
-        );
-      },
-    );
-  }
-
-  @override
-  void restoreState(RestorationBucket? oldBucket, bool initialRestore) {
-    registerForRestoration(_selectedDate, 'selected_date');
-    registerForRestoration(
-        _restorableDatePickerRouteFuture, 'date_picker_route_future');
-  }
-
-  void _selectDate(DateTime? newSelectedDate) {
-    if (newSelectedDate != null) {
-      setState(() {
-        _selectedDate.value = newSelectedDate;
-        setState(() {
-          setState(() {
-            datePickerController.text =
-                '${_selectedDate.value.day}/${_selectedDate.value.month}/${_selectedDate.value.year}';
-          });
-        });
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -257,6 +203,7 @@ class _AddDailyState extends State<AddDaily> with RestorationMixin {
               const SizedBox(
                 height: 5,
               ),
+              /*
               Text(
                 'Date',
                 style: GoogleFonts.poppins(
@@ -290,6 +237,7 @@ class _AddDailyState extends State<AddDaily> with RestorationMixin {
                       ),
                     )),
               ),
+              
               Row(children: [
                 Checkbox(
                   value: isChecked,
@@ -297,8 +245,8 @@ class _AddDailyState extends State<AddDaily> with RestorationMixin {
                     setState(() {
                       isChecked = value!;
                       isChecked
-                          ? containerTopHeight = 480
-                          : containerTopHeight = 400;
+                          ? containerTopHeight = 410
+                          : containerTopHeight = 330;
                     });
                   },
                   checkColor: Colors.black,
@@ -313,268 +261,232 @@ class _AddDailyState extends State<AddDaily> with RestorationMixin {
                   ),
                 )
               ]),
-              isChecked
-                  ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+              */
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Frequency',
+                    style: GoogleFonts.poppins(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  SingleChildScrollView(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          'Frequency',
-                          style: GoogleFonts.poppins(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.white,
-                          ),
+                        Container(
+                          width: dayButtonWidth,
+                          child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  minimumSize: Size.zero, // Set this
+                                  padding: const EdgeInsets.only(
+                                      right: 0, left: 0, top: 6, bottom: 6),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                  backgroundColor:
+                                      pressAttentionDay1 ? button1 : button2),
+                              onPressed: () {
+                                setState(() {
+                                  pressAttentionDay1
+                                      ? pressAttentionDay1 = false
+                                      : pressAttentionDay1 = true;
+                                });
+                              },
+                              child: Text(
+                                'Mon',
+                                style: GoogleFonts.poppins(
+                                    fontSize: dayButtonFontSize,
+                                    fontWeight: FontWeight.w500,
+                                    color: pressAttentionDay1
+                                        ? blueColor
+                                        : button1),
+                              )),
                         ),
-                        const SizedBox(
-                          height: 5,
+                        Container(
+                          padding: const EdgeInsets.only(left: 5),
+                          width: dayButtonWidth,
+                          child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  minimumSize: Size.zero, // Set this
+                                  padding: const EdgeInsets.only(
+                                      right: 0, left: 0, top: 6, bottom: 6),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                  backgroundColor:
+                                      pressAttentionDay2 ? button1 : button2),
+                              onPressed: () {
+                                setState(() {
+                                  pressAttentionDay2
+                                      ? pressAttentionDay2 = false
+                                      : pressAttentionDay2 = true;
+                                });
+                              },
+                              child: Text(
+                                'Tue',
+                                style: GoogleFonts.poppins(
+                                    fontSize: dayButtonFontSize,
+                                    fontWeight: FontWeight.w500,
+                                    color: pressAttentionDay2
+                                        ? blueColor
+                                        : button1),
+                              )),
                         ),
-                        SingleChildScrollView(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Container(
-                                width: dayButtonWidth,
-                                child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                        minimumSize: Size.zero, // Set this
-                                        padding: const EdgeInsets.only(
-                                            right: 0,
-                                            left: 0,
-                                            top: 6,
-                                            bottom: 6),
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                        backgroundColor: pressAttentionDay1
-                                            ? button1
-                                            : button2),
-                                    onPressed: () {
-                                      setState(() {
-                                        pressAttentionDay1
-                                            ? pressAttentionDay1 = false
-                                            : pressAttentionDay1 = true;
-                                      });
-                                    },
-                                    child: Text(
-                                      'Mon',
-                                      style: GoogleFonts.poppins(
-                                          fontSize: dayButtonFontSize,
-                                          fontWeight: FontWeight.w500,
-                                          color: pressAttentionDay1
-                                              ? blueColor
-                                              : button1),
-                                    )),
-                              ),
-                              Container(
-                                padding: const EdgeInsets.only(left: 5),
-                                width: dayButtonWidth,
-                                child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                        minimumSize: Size.zero, // Set this
-                                        padding: const EdgeInsets.only(
-                                            right: 0,
-                                            left: 0,
-                                            top: 6,
-                                            bottom: 6),
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                        backgroundColor: pressAttentionDay2
-                                            ? button1
-                                            : button2),
-                                    onPressed: () {
-                                      setState(() {
-                                        pressAttentionDay2
-                                            ? pressAttentionDay2 = false
-                                            : pressAttentionDay2 = true;
-                                      });
-                                    },
-                                    child: Text(
-                                      'Tue',
-                                      style: GoogleFonts.poppins(
-                                          fontSize: dayButtonFontSize,
-                                          fontWeight: FontWeight.w500,
-                                          color: pressAttentionDay2
-                                              ? blueColor
-                                              : button1),
-                                    )),
-                              ),
-                              Container(
-                                padding: const EdgeInsets.only(left: 5),
-                                width: dayButtonWidth,
-                                child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                        minimumSize: Size.zero, // Set this
-                                        padding: const EdgeInsets.only(
-                                            right: 0,
-                                            left: 0,
-                                            top: 6,
-                                            bottom: 6),
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                        backgroundColor: pressAttentionDay3
-                                            ? button1
-                                            : button2),
-                                    onPressed: () {
-                                      setState(() {
-                                        pressAttentionDay3
-                                            ? pressAttentionDay3 = false
-                                            : pressAttentionDay3 = true;
-                                      });
-                                    },
-                                    child: Text(
-                                      'Wed',
-                                      style: GoogleFonts.poppins(
-                                          fontSize: dayButtonFontSize,
-                                          fontWeight: FontWeight.w500,
-                                          color: pressAttentionDay3
-                                              ? blueColor
-                                              : button1),
-                                    )),
-                              ),
-                              Container(
-                                padding: const EdgeInsets.only(left: 5),
-                                width: dayButtonWidth,
-                                child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                        minimumSize: Size.zero, // Set this
-                                        padding: const EdgeInsets.only(
-                                            right: 0,
-                                            left: 0,
-                                            top: 6,
-                                            bottom: 6),
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                        backgroundColor: pressAttentionDay4
-                                            ? button1
-                                            : button2),
-                                    onPressed: () {
-                                      setState(() {
-                                        pressAttentionDay4
-                                            ? pressAttentionDay4 = false
-                                            : pressAttentionDay4 = true;
-                                      });
-                                    },
-                                    child: Text(
-                                      'Thu',
-                                      style: GoogleFonts.poppins(
-                                          fontSize: dayButtonFontSize,
-                                          fontWeight: FontWeight.w500,
-                                          color: pressAttentionDay4
-                                              ? blueColor
-                                              : button1),
-                                    )),
-                              ),
-                              Container(
-                                padding: const EdgeInsets.only(left: 5),
-                                width: dayButtonWidth,
-                                child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                        minimumSize: Size.zero, // Set this
-                                        padding: const EdgeInsets.only(
-                                            right: 0,
-                                            left: 0,
-                                            top: 6,
-                                            bottom: 6),
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                        backgroundColor: pressAttentionDay5
-                                            ? button1
-                                            : button2),
-                                    onPressed: () {
-                                      setState(() {
-                                        pressAttentionDay5
-                                            ? pressAttentionDay5 = false
-                                            : pressAttentionDay5 = true;
-                                      });
-                                    },
-                                    child: Text(
-                                      'Fri',
-                                      style: GoogleFonts.poppins(
-                                          fontSize: dayButtonFontSize,
-                                          fontWeight: FontWeight.w500,
-                                          color: pressAttentionDay5
-                                              ? blueColor
-                                              : button1),
-                                    )),
-                              ),
-                              Container(
-                                padding: const EdgeInsets.only(left: 5),
-                                width: dayButtonWidth,
-                                child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                        minimumSize: Size.zero, // Set this
-                                        padding: const EdgeInsets.only(
-                                            right: 0,
-                                            left: 0,
-                                            top: 6,
-                                            bottom: 6),
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                        backgroundColor: pressAttentionDay6
-                                            ? button1
-                                            : button2),
-                                    onPressed: () {
-                                      setState(() {
-                                        pressAttentionDay6
-                                            ? pressAttentionDay6 = false
-                                            : pressAttentionDay6 = true;
-                                      });
-                                    },
-                                    child: Text(
-                                      'Sat',
-                                      style: GoogleFonts.poppins(
-                                          fontSize: dayButtonFontSize,
-                                          fontWeight: FontWeight.w500,
-                                          color: pressAttentionDay6
-                                              ? blueColor
-                                              : button1),
-                                    )),
-                              ),
-                              Container(
-                                padding: const EdgeInsets.only(left: 5),
-                                width: dayButtonWidth,
-                                child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                        minimumSize: Size.zero, // Set this
-                                        padding: const EdgeInsets.only(
-                                            right: 0,
-                                            left: 0,
-                                            top: 6,
-                                            bottom: 6),
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                        backgroundColor: pressAttentionDay7
-                                            ? button1
-                                            : button2),
-                                    onPressed: () {
-                                      setState(() {
-                                        pressAttentionDay7
-                                            ? pressAttentionDay7 = false
-                                            : pressAttentionDay7 = true;
-                                      });
-                                    },
-                                    child: Text(
-                                      'Sun',
-                                      style: GoogleFonts.poppins(
-                                          fontSize: dayButtonFontSize,
-                                          fontWeight: FontWeight.w500,
-                                          color: pressAttentionDay7
-                                              ? blueColor
-                                              : button1),
-                                    )),
-                              ),
-                            ],
-                          ),
+                        Container(
+                          padding: const EdgeInsets.only(left: 5),
+                          width: dayButtonWidth,
+                          child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  minimumSize: Size.zero, // Set this
+                                  padding: const EdgeInsets.only(
+                                      right: 0, left: 0, top: 6, bottom: 6),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                  backgroundColor:
+                                      pressAttentionDay3 ? button1 : button2),
+                              onPressed: () {
+                                setState(() {
+                                  pressAttentionDay3
+                                      ? pressAttentionDay3 = false
+                                      : pressAttentionDay3 = true;
+                                });
+                              },
+                              child: Text(
+                                'Wed',
+                                style: GoogleFonts.poppins(
+                                    fontSize: dayButtonFontSize,
+                                    fontWeight: FontWeight.w500,
+                                    color: pressAttentionDay3
+                                        ? blueColor
+                                        : button1),
+                              )),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.only(left: 5),
+                          width: dayButtonWidth,
+                          child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  minimumSize: Size.zero, // Set this
+                                  padding: const EdgeInsets.only(
+                                      right: 0, left: 0, top: 6, bottom: 6),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                  backgroundColor:
+                                      pressAttentionDay4 ? button1 : button2),
+                              onPressed: () {
+                                setState(() {
+                                  pressAttentionDay4
+                                      ? pressAttentionDay4 = false
+                                      : pressAttentionDay4 = true;
+                                });
+                              },
+                              child: Text(
+                                'Thu',
+                                style: GoogleFonts.poppins(
+                                    fontSize: dayButtonFontSize,
+                                    fontWeight: FontWeight.w500,
+                                    color: pressAttentionDay4
+                                        ? blueColor
+                                        : button1),
+                              )),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.only(left: 5),
+                          width: dayButtonWidth,
+                          child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  minimumSize: Size.zero, // Set this
+                                  padding: const EdgeInsets.only(
+                                      right: 0, left: 0, top: 6, bottom: 6),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                  backgroundColor:
+                                      pressAttentionDay5 ? button1 : button2),
+                              onPressed: () {
+                                setState(() {
+                                  pressAttentionDay5
+                                      ? pressAttentionDay5 = false
+                                      : pressAttentionDay5 = true;
+                                });
+                              },
+                              child: Text(
+                                'Fri',
+                                style: GoogleFonts.poppins(
+                                    fontSize: dayButtonFontSize,
+                                    fontWeight: FontWeight.w500,
+                                    color: pressAttentionDay5
+                                        ? blueColor
+                                        : button1),
+                              )),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.only(left: 5),
+                          width: dayButtonWidth,
+                          child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  minimumSize: Size.zero, // Set this
+                                  padding: const EdgeInsets.only(
+                                      right: 0, left: 0, top: 6, bottom: 6),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                  backgroundColor:
+                                      pressAttentionDay6 ? button1 : button2),
+                              onPressed: () {
+                                setState(() {
+                                  pressAttentionDay6
+                                      ? pressAttentionDay6 = false
+                                      : pressAttentionDay6 = true;
+                                });
+                              },
+                              child: Text(
+                                'Sat',
+                                style: GoogleFonts.poppins(
+                                    fontSize: dayButtonFontSize,
+                                    fontWeight: FontWeight.w500,
+                                    color: pressAttentionDay6
+                                        ? blueColor
+                                        : button1),
+                              )),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.only(left: 5),
+                          width: dayButtonWidth,
+                          child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  minimumSize: Size.zero, // Set this
+                                  padding: const EdgeInsets.only(
+                                      right: 0, left: 0, top: 6, bottom: 6),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10)),
+                                  backgroundColor:
+                                      pressAttentionDay7 ? button1 : button2),
+                              onPressed: () {
+                                setState(() {
+                                  pressAttentionDay7
+                                      ? pressAttentionDay7 = false
+                                      : pressAttentionDay7 = true;
+                                });
+                              },
+                              child: Text(
+                                'Sun',
+                                style: GoogleFonts.poppins(
+                                    fontSize: dayButtonFontSize,
+                                    fontWeight: FontWeight.w500,
+                                    color: pressAttentionDay7
+                                        ? blueColor
+                                        : button1),
+                              )),
                         ),
                       ],
-                    )
-                  : Container(),
+                    ),
+                  ),
+                ],
+              ),
               Text(
                 'Time',
                 style: GoogleFonts.poppins(
@@ -712,19 +624,45 @@ class _AddDailyState extends State<AddDaily> with RestorationMixin {
                         ),
                         onPressed: () {
                           setState(() {
+                            final id = dbHelper.insert(Daily(
+                                name: nameController.text,
+                                category: category,
+                                sun: pressAttentionDay1,
+                                mon: pressAttentionDay2,
+                                tue: pressAttentionDay3,
+                                wed: pressAttentionDay4,
+                                thu: pressAttentionDay5,
+                                fri: pressAttentionDay6,
+                                sat: pressAttentionDay7,
+                                reminder: reminderValue,
+                                note: noteController.text,
+                                location: locationController.text));
+                            if (id != null) {
+                              showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AlertDialog(
+                                      title: Text('success'),
+                                      actions: [
+                                        TextButton(
+                                          style: TextButton.styleFrom(
+                                            textStyle: Theme.of(context)
+                                                .textTheme
+                                                .labelLarge,
+                                          ),
+                                          child: const Text('Enable'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                      ],
+                                    );
+                                  });
+                            }
                             pressAttention1 = true;
                             pressAttention2 = true;
                             pressAttention3 = true;
                             timeFormat = int.parse(timeFormatController.text);
-
-                            daily.add(Daily(
-                                nameController.text,
-                                category,
-                                _selectedDate.value,
-                                timeFormat,
-                                reminderValue,
-                                noteController.text,
-                                locationController.text));
                           });
                         },
                         child: Text(

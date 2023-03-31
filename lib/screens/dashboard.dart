@@ -2,11 +2,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:healthy_planner/database/daily.dart';
 import 'package:healthy_planner/utils/theme.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:flutter_switch/flutter_switch.dart';
-import 'package:hive/hive.dart';
+import 'package:healthy_planner/database/database_helper.dart';
+import 'package:healthy_planner/widget/listDaily.dart';
+
+final dbHelper = DatabaseHelper();
 
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
@@ -105,8 +108,10 @@ class _DashboardState extends State<Dashboard> {
                         if (val == true) {
                           weekView = 1;
                           heightCalendar = 144;
+                          colorCalendar = true;
                         } else {
                           weekView = 4;
+                          colorCalendar = false;
                           heightCalendar = 300;
                         }
                       });
@@ -115,15 +120,22 @@ class _DashboardState extends State<Dashboard> {
                 ),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Container(
               height: heightCalendar,
+              padding: EdgeInsets.only(left: 20, right: 20),
+              decoration:
+                  BoxDecoration(borderRadius: BorderRadius.circular(50)),
               child: SfCalendar(
                 view: CalendarView.month,
+
                 showNavigationArrow: true,
+                todayHighlightColor: blueColor,
+                //backgroundColor: colorCalendar ? Colors.transparent : button1,
                 cellBorderColor: Colors.transparent,
+
                 dataSource: MeetingDataSource(_getDataSource()),
                 monthViewSettings: MonthViewSettings(
                   numberOfWeeksInView: weekView,
@@ -150,7 +162,7 @@ class _DashboardState extends State<Dashboard> {
               ],
             ),
             const SizedBox(
-              height: 10,
+              height: 20,
             ),
             SingleChildScrollView(
               padding: EdgeInsets.only(left: 20),
@@ -158,47 +170,29 @@ class _DashboardState extends State<Dashboard> {
               child: Column(
                 children: [
                   ListView.builder(
+                    physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemCount: dayTime.length,
                     itemBuilder: (context, index) {
                       return ListTile(
-                          leading: Text(
-                        dayTime[index],
-                        style: GoogleFonts.poppins(
-                            color: Colors.grey,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w500),
-                      ));
+                          title: index == 9 ? ListDaily() : Container(),
+                          leading: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                dayTime[index],
+                                style: GoogleFonts.poppins(
+                                    color: Colors.grey,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ],
+                          ));
                     },
                   ),
                 ],
               ),
             )
-            /*
-            FutureBuilder(
-                future: Hive.openBox("dailys"),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    if (snapshot.hasError)
-                      return Center(
-                        child: Text('snapshot.error'),
-                      );
-                  } else {
-                    var daily = Hive.box('dailys');
-                    if (daily.length == 0) {
-                      daily.add(Daily('s', 0, dateTime, 0, 0, '421421', '321'));
-                    }
-                    return ListView.builder(
-                      itemCount: daily.length,
-                      itemBuilder: (context, index) {
-                        Daily dailys = daily.getAt(index);
-                        return Text(dailys.reminder.toString());
-                      },
-                    );
-                  }
-                  return Text('da');
-                })
-                */
           ]),
         ));
   }
@@ -209,13 +203,27 @@ class _DashboardState extends State<Dashboard> {
     final DateTime startTime =
         DateTime(today.year, today.month, today.day, 5, 0, 0);
     final DateTime endTime = startTime.add(const Duration(hours: 2));
-    meetings.add(Meeting(
-        'Conference   5 PM - 7 PM', startTime, endTime, blueBackground, false));
+    //meetings.add(Meeting(
+    //'Conference   5 PM - 7 PM', startTime, endTime, blueBackground, false));
     meetings.add(Meeting(
         'Yoga   9 PM - 11 PM',
-        DateTime(today.year, today.month, today.day, 9, 0, 0),
-        DateTime(today.year, today.month, today.day, 9, 0, 0)
-            .add(const Duration(hours: 2)),
+        DateTime(today.year, today.month, today.day + 7, 9, 0, 0),
+        DateTime(today.year, today.month, today.day + 7, 9, 0, 0)
+            .add(const Duration(hours: 1)),
+        button2,
+        false));
+    meetings.add(Meeting(
+        'Yoga   9 PM - 11 PM',
+        DateTime(today.year, today.month, today.day + 14, 9, 0, 0),
+        DateTime(today.year, today.month, today.day + 14, 9, 0, 0)
+            .add(const Duration(hours: 1)),
+        button2,
+        false));
+    meetings.add(Meeting(
+        'Yoga   9 PM - 11 PM',
+        DateTime(today.year, today.month, today.day + 21, 9, 0, 0),
+        DateTime(today.year, today.month, today.day + 21, 9, 0, 0)
+            .add(const Duration(hours: 1)),
         button2,
         false));
     return meetings;
